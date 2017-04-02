@@ -9,35 +9,45 @@ namespace MyProject_D20170331.Controllers
     public class OrderController : Controller
     {
         MyProject_D20170331.Models.MyDB db = new Models.MyDB();
+        Models.OrderService orderService = new Models.OrderService();
 
         // GET: Order
         public ActionResult Index()
         {
-            var tmp=db.Employees.Select(x => x.Phone ).First();
+            return View();
+        }
 
-            List<SelectListItem> custData = new List<SelectListItem>();
-            custData.Add(new SelectListItem(){Text=tmp });
+        public ActionResult QueryOrder()
+        {
+            DropDown_EmpName();
+            return View();
+        }
 
-            ViewBag.custData = custData;
-            ViewBag.Data = tmp;
+
+        [HttpPost]
+        public JsonResult QueryOrder(string CustomerName,int EmployeeID)
+        {
+            DropDown_EmpName();
+            return this.Json(orderService.GetQueryResult(CustomerName, EmployeeID),JsonRequestBehavior.AllowGet);
+        }
 
 
+        public void DropDown_EmpName()
+        {
             List<SelectListItem> emp = new List<SelectListItem>();
-            Models.OrderService orderService = new Models.OrderService();
-             var a= orderService.GetEmpName();
+            var EmpName = orderService.GetEmpName();
 
-            foreach (var item in a)
+            for (int i = 0; i < EmpName.ToArray().Length; i++)
             {
                 emp.Add(new SelectListItem
                 {
-                    Text = item
+                    Text = EmpName[i],
+                    Value = (i + 1).ToString()
                 });
             }
 
             ViewBag.EmpName = emp;
-            return View();
         }
 
-        
     }
 }

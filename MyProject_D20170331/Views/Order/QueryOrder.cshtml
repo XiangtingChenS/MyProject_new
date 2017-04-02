@@ -1,0 +1,126 @@
+﻿@model MyProject_D20170331.Models.Orders
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>QueryOrder</title>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+
+        <div class="container">
+            <h3>訂單查詢</h3>
+            <table class="table table-bordered">
+                @*<tr>
+                        <td>訂單編號</td>
+                        <td colspan="3">
+                            @Html.TextBox(" ")
+                        </td>
+
+                    </tr>*@
+                <tr >
+                    <td>客戶名稱</td>
+                    <td colspan="5">
+                        @Html.TextBox("CustName")
+                    </td>
+                </tr>
+                <tr>
+                    <td>負責員工</td>
+                    <td colspan="5">
+                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)
+                      @* @Html.DropDownListFor(model => model.EmployeeID, (List<SelectListItem>)ViewBag.EmpName)*@
+                    </td>
+                </tr>
+                @*<tr>
+                        <td>出貨公司</td>
+                        <td colspan="3">
+                            @Html.DropDownList("custData", (List<SelectListItem>)ViewBag.custData)
+                            @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>訂購日期</td>
+                        <td>
+                            <input type="date">
+                            @Html.TextBox(" ",new { @type="data"})
+                            @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
+                        </td>
+                        <td>出貨日期</td>
+                        <td>
+                            <input type="date">
+                            @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
+                        </td>
+
+                    </tr>*@
+                @*<tr>
+                        <td>需要日期</td>
+                        <td colspan="3">
+                           @Html.TextBox(" ")
+                            @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)
+                        </td>
+                    </tr>*@
+
+                <tr >
+                    <td></td>
+                    <td colspan="5">
+                        <input id="MyQuery" type="submit" value="查詢" />
+                        <input type="button" value="清除" />
+                        @*@Html.ActionLink("新增訂單", "InsertOrder")*@
+                        <input type="button" value="新增訂單" />
+                    </td>
+
+                </tr>
+            </table>
+
+            <h3>查詢結果</h3>
+            <table id="tab" class="table table-bordered">
+                <tbody id="tab-tbody">
+                    <tr>
+                        <td>訂單編號</td>
+                        <td>客戶名稱</td>
+                        <td>訂購日期</td>
+                        <td>發貨日期</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            $("#MyQuery").click(function () {
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Action("QueryOrder")',
+                    data: { CustomerName: $('#CustName').val(), EmployeeID: $('#EmpName').val() },
+                    success: function (result) {
+                        var tag=document.getElementById("tab-tbody");
+                        var tabRow =tag.rows.length;
+                        for (i = tabRow - 1; i > 0; i--) {
+                            tag.deleteRow(i);
+                        }
+                        $.each(result, function (index, field) {
+
+                            $("#tab-tbody").append("<tr><td>" + field.OrderID + "</td><td>" + field.CustomerName + "</td><td>" + field.OrderDate + "</td><td>" + field.ShippedDate + "</td><td><button>修改</button></td><td><button>刪除</button></td></tr>");
+                        });
+                    },
+                    error: function () { alert("Error"); }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
