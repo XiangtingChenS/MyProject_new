@@ -40,7 +40,7 @@ namespace MyProject_D20170331.Controllers
             if (!ShipDate.Equals("")) shipeDate = Convert.ToDateTime(ShipDate);
             if (!RequireDate.Equals("")) requireDate = Convert.ToDateTime(RequireDate);
 
-            return this.Json(orderService.GetQueryResult(Convert.ToInt32(OrderID) , CustomerName, EmployeeName, ShipCompanyName, ordereDate, shipeDate, requireDate),JsonRequestBehavior.AllowGet);
+            return this.Json(orderService.GetQueryResult(Convert.ToInt32(OrderID) , CustomerName, EmployeeName, ShipCompanyName, ordereDate, requireDate, shipeDate),JsonRequestBehavior.AllowGet);
         }
 
 
