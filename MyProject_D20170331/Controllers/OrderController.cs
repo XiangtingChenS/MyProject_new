@@ -20,33 +20,61 @@ namespace MyProject_D20170331.Controllers
         public ActionResult QueryOrder()
         {
             DropDown_EmpName();
+            DropDown_ShipName();
             return View();
         }
 
 
         [HttpPost]
-        public JsonResult QueryOrder(string CustomerName,int EmployeeID)
+        public JsonResult QueryOrder(string OrderID, string CustomerName,string EmployeeName, string ShipCompanyName, string OrderDate, string RequireDate, string ShipDate)
         {
             DropDown_EmpName();
-            return this.Json(orderService.GetQueryResult(CustomerName, EmployeeID),JsonRequestBehavior.AllowGet);
+            DropDown_ShipName();
+
+            DateTime ordereDate = new DateTime();
+            DateTime shipeDate = new DateTime();
+            DateTime requireDate = new DateTime();
+
+            if (OrderID.Equals("")) OrderID = "0";
+            if (!OrderDate.Equals("")) ordereDate = Convert.ToDateTime(OrderDate);
+            if (!ShipDate.Equals("")) shipeDate = Convert.ToDateTime(ShipDate);
+            if (!RequireDate.Equals("")) requireDate = Convert.ToDateTime(RequireDate);
+
+            return this.Json(orderService.GetQueryResult(Convert.ToInt32(OrderID) , CustomerName, EmployeeName, ShipCompanyName, ordereDate, shipeDate, requireDate),JsonRequestBehavior.AllowGet);
         }
 
 
         public void DropDown_EmpName()
         {
-            List<SelectListItem> emp = new List<SelectListItem>();
-            var EmpName = orderService.GetEmpName();
+            List<SelectListItem> result = new List<SelectListItem>();
+            var tmp= orderService.GetEmpName();
 
-            for (int i = 0; i < EmpName.ToArray().Length; i++)
+            foreach(var item in tmp)
             {
-                emp.Add(new SelectListItem
+                result.Add(new SelectListItem
                 {
-                    Text = EmpName[i],
-                    Value = (i + 1).ToString()
+                    Text = item 
+                });
+            }
+            
+            ViewBag.EmpName = result;
+        }
+
+
+        public void DropDown_ShipName()
+        {
+            List<SelectListItem> result = new List<SelectListItem>();
+            var tmp = orderService.GetShipCompany();
+
+            foreach (var item in tmp)
+            {
+                result.Add(new SelectListItem
+                {
+                    Text = item
                 });
             }
 
-            ViewBag.EmpName = emp;
+            ViewBag.ShipCompany = result;
         }
 
     }

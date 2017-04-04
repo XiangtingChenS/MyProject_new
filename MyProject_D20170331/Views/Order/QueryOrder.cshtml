@@ -21,14 +21,13 @@
         <div class="container">
             <h3>訂單查詢</h3>
             <table class="table table-bordered">
-                @*<tr>
-                        <td>訂單編號</td>
-                        <td colspan="3">
-                            @Html.TextBox(" ")
-                        </td>
-
-                    </tr>*@
-                <tr >
+                <tr>
+                    <td>訂單編號</td>
+                    <td colspan="3">
+                        @Html.TextBox("OrderId")
+                    </td>
+                </tr>
+                <tr>
                     <td>客戶名稱</td>
                     <td colspan="5">
                         @Html.TextBox("CustName")
@@ -37,40 +36,40 @@
                 <tr>
                     <td>負責員工</td>
                     <td colspan="5">
-                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)
-                      @* @Html.DropDownListFor(model => model.EmployeeID, (List<SelectListItem>)ViewBag.EmpName)*@
+                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName,string.Empty)
+                        @* @Html.DropDownListFor(model => model.EmployeeID, (List<SelectListItem>)ViewBag.EmpName)*@
                     </td>
                 </tr>
-                @*<tr>
-                        <td>出貨公司</td>
-                        <td colspan="3">
-                            @Html.DropDownList("custData", (List<SelectListItem>)ViewBag.custData)
-                            @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>訂購日期</td>
-                        <td>
-                            <input type="date">
-                            @Html.TextBox(" ",new { @type="data"})
-                            @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
-                        </td>
-                        <td>出貨日期</td>
-                        <td>
-                            <input type="date">
-                            @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
-                        </td>
+                <tr>
+                    <td>出貨公司</td>
+                    <td colspan="3">
+                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany,string.Empty)
+                        @*@Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)*@
+                    </td>
+                </tr>
+                <tr>
+                    <td>訂購日期</td>
+                    <td>
+                        <input type="date" id="orderDate">
+                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
+                    </td>
+                    <td>出貨日期</td>
+                    <td>
+                        <input type="date" id="shipDate">
+                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
+                    </td>
 
-                    </tr>*@
-                @*<tr>
-                        <td>需要日期</td>
-                        <td colspan="3">
-                           @Html.TextBox(" ")
-                            @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)
-                        </td>
-                    </tr>*@
+                </tr>
+                <tr>
+                    <td>需要日期</td>
+                    <td colspan="3">
+                        <input type="date" id="requireDate">
+                        @*@Html.TextBox(" ")
+                            @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)*@
+                    </td>
+                </tr>
 
-                <tr >
+                <tr>
                     <td></td>
                     <td colspan="5">
                         <input id="MyQuery" type="submit" value="查詢" />
@@ -98,17 +97,26 @@
         </div>
 
     </div>
-    
+
     <script>
         $(document).ready(function () {
             $("#MyQuery").click(function () {
                 $.ajax({
                     type: 'post',
                     url: '@Url.Action("QueryOrder")',
-                    data: { CustomerName: $('#CustName').val(), EmployeeID: $('#EmpName').val() },
+                    data: {
+                        OrderID: $('#OrderId').val(),
+                        CustomerName: $('#CustName').val(),
+                        EmployeeName: $('#EmpName option:selected').text(),
+                        ShipCompanyName: $('#ShipCompany option:selected').text(),
+                        OrderDate: $('#orderDate').val(),
+                        RequireDate: $('#requireDate').val(),
+                        ShipDate: $('#shipDate').val()
+                       
+                    },
                     success: function (result) {
-                        var tag=document.getElementById("tab-tbody");
-                        var tabRow =tag.rows.length;
+                        var tag = document.getElementById("tab-tbody");
+                        var tabRow = tag.rows.length;
                         for (i = tabRow - 1; i > 0; i--) {
                             tag.deleteRow(i);
                         }

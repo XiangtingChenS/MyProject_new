@@ -12,7 +12,7 @@ namespace MyProject_D20170331.Models
 
         public List<string> GetEmpName()
         {
-            List<string> emp = new List<string>();
+            List<string> result = new List<string>();
             var name = db.Employees
                      .Select(x => new
                      {
@@ -22,27 +22,57 @@ namespace MyProject_D20170331.Models
 
             foreach (var item in name)
             {
-                emp.Add(item.LastName+"-"+item.FirstName);
+                result.Add(item.LastName + "-" + item.FirstName);
             }
-
-            return emp;
+            return result;
         }
 
-        public List<OrderModel> GetQueryResult(string CompanyName, int EmployeeID)
+        public List<string> GetShipCompany()
+        {
+            List<string> result = new List<string>();
+            var company = db.Shippers
+                        .Select(x => new
+                        {
+                            x.CompanyName
+                        })
+                        .ToList();
+
+            foreach (var item in company)
+            {
+                result.Add(item.CompanyName);
+            }
+
+            return result;
+        }
+
+
+        //這裡要再改
+        public List<OrderModel> GetQueryResult(int OrderID, string CompanyName, string EmployeeName, string ShipCompanyName, DateTime OrderDate, DateTime RequireDate, DateTime ShipDate)
         {
             List<OrderModel> result = new List<OrderModel>();
+            DateTime emptyDate = new DateTime();
 
             var tmp = db.Orders
                     .Select(x => new
                     {
                         x.OrderID,
                         CompName = x.Customers.CompanyName,
+                        EmployeeName = x.Employees.LastName + "-" + x.Employees.FirstName,
+                        ShipCompanyName = x.Shippers.CompanyName,
                         x.OrderDate,
-                        x.ShippedDate,
-                        x.EmployeeID
+                        x.RequiredDate,
+                        x.ShippedDate
                     })
-                    .Where(x => x.CompName == CompanyName && x.EmployeeID==EmployeeID)
-                    .OrderBy(x=>x.OrderID)
+                    .Where(x =>
+                            (OrderID == 0 || x.OrderID == OrderID ) &&
+                            (CompanyName == null || x.CompName.Contains(CompanyName)) &&
+                            (EmployeeName == "" || x.EmployeeName == EmployeeName) &&
+                            (ShipCompanyName == "" || x.ShipCompanyName == ShipCompanyName) &&
+                            (OrderDate == emptyDate || x.OrderDate == OrderDate) &&
+                            (RequireDate == emptyDate || x.RequiredDate == RequireDate) &&
+                            (ShipDate == emptyDate || x.ShippedDate == ShipDate)
+                     )
+                    .OrderBy(x => x.OrderID)
                     .ToList();
 
             foreach (var item in tmp)
@@ -50,9 +80,9 @@ namespace MyProject_D20170331.Models
                 OrderModel orderModel = new OrderModel()
                 {
                     OrderID = item.OrderID,
-                    CustomerName=item.CompName,
-                    OrderDate=item.OrderDate.Date.ToString(),
-                    ShippedDate=item.ShippedDate.ToString()
+                    CustomerName = item.CompName,
+                    OrderDate = item.OrderDate.Date.ToString(),
+                    ShippedDate = item.ShippedDate.ToString()
                 };
                 result.Add(orderModel);
             }
