@@ -47,13 +47,17 @@ namespace MyProject_D20170331.Controllers
         public void DropDown_EmpName()
         {
             List<SelectListItem> result = new List<SelectListItem>();
-            var tmp= orderService.GetEmpName();
+            var tmp= orderService.GetEmpName().ToArray();
 
-            foreach(var item in tmp)
+            for (int i = -1; i < tmp.Length; i++)
             {
+                string value = (i + 1).ToString();
+                string text = (i == -1) ? text = string.Empty : text = tmp[i];
+                
                 result.Add(new SelectListItem
                 {
-                    Text = item 
+                    Value= value,
+                    Text = text
                 });
             }
             
@@ -64,13 +68,17 @@ namespace MyProject_D20170331.Controllers
         public void DropDown_ShipName()
         {
             List<SelectListItem> result = new List<SelectListItem>();
-            var tmp = orderService.GetShipCompany();
+            var tmp = orderService.GetShipCompany().ToArray();
 
-            foreach (var item in tmp)
+            for (int i = -1; i < tmp.Length; i++)
             {
+                var value = (i + 1).ToString();
+                string text = (i == -1) ? text = string.Empty : text = tmp[i];
+
                 result.Add(new SelectListItem
                 {
-                    Text = item
+                    Value=value,
+                    Text=text
                 });
             }
 

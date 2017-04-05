@@ -36,14 +36,14 @@
                 <tr>
                     <td>負責員工</td>
                     <td colspan="5">
-                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName,string.Empty)
+                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)
                         @* @Html.DropDownListFor(model => model.EmployeeID, (List<SelectListItem>)ViewBag.EmpName)*@
                     </td>
                 </tr>
                 <tr>
                     <td>出貨公司</td>
                     <td colspan="3">
-                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany,string.Empty)
+                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany)
                         @*@Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)*@
                     </td>
                 </tr>
@@ -73,7 +73,7 @@
                     <td></td>
                     <td colspan="5">
                         <input id="MyQuery" type="submit" value="查詢" />
-                        <input type="button" value="清除" />
+                        <input id="MyClean" type="button" value="清除" />
                         @*@Html.ActionLink("新增訂單", "InsertOrder")*@
                         <input type="button" value="新增訂單" />
                     </td>
@@ -112,7 +112,7 @@
                         OrderDate: $('#orderDate').val(),
                         RequireDate: $('#requireDate').val(),
                         ShipDate: $('#shipDate').val()
-                       
+
                     },
                     success: function (result) {
                         var tag = document.getElementById("tab-tbody");
@@ -129,6 +129,25 @@
                 });
             });
         });
+
+        document.getElementById("MyClean").onclick = function () {
+            document.getElementById("OrderId").value = "";
+            document.getElementById("CustName").value = "";
+            document.getElementById("EmpName").selectedIndex = 0;
+            document.getElementById("ShipCompany").selectedIndex = 0;
+            document.getElementById("orderDate").value = "";
+            document.getElementById("requireDate").value = "";
+            document.getElementById("shipDate").value = "";
+        }
+
+        //$(document).ready(function () {
+        //    $("#MyClean").click(function () {
+        //      //  $('#OrderId').val() = "";
+        //        alert("asd");
+
+        //    });
+        //});
+
     </script>
 </body>
 </html>
