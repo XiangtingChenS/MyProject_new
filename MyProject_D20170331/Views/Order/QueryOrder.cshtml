@@ -29,13 +29,13 @@
                 </tr>
                 <tr>
                     <td>客戶名稱</td>
-                    <td colspan="5">
+                    <td colspan="3">
                         @Html.TextBox("CustName")
                     </td>
                 </tr>
                 <tr>
                     <td>負責員工</td>
-                    <td colspan="5">
+                    <td colspan="3">
                         @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)
                         @* @Html.DropDownListFor(model => model.EmployeeID, (List<SelectListItem>)ViewBag.EmpName)*@
                     </td>
@@ -71,11 +71,11 @@
 
                 <tr>
                     <td></td>
-                    <td colspan="5">
+                    <td colspan="3">
                         <input id="MyQuery" type="submit" value="查詢" />
                         <input id="MyClean" type="button" value="清除" />
                         @*@Html.ActionLink("新增訂單", "InsertOrder")*@
-                        <input type="button" value="新增訂單" />
+                        <input id="MyInsertOrder" type="button" value="新增訂單" />
                     </td>
 
                 </tr>
@@ -138,6 +138,10 @@
             document.getElementById("orderDate").value = "";
             document.getElementById("requireDate").value = "";
             document.getElementById("shipDate").value = "";
+        }
+
+        document.getElementById("MyInsertOrder").onclick = function () {
+            location.href = "/Order/InsertOrder";
         }
 
         //$(document).ready(function () {

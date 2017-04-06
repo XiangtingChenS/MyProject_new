@@ -8,7 +8,7 @@ namespace MyProject_D20170331.Controllers
 {
     public class OrderController : Controller
     {
-        MyProject_D20170331.Models.MyDB db = new Models.MyDB();
+        Models.MyDB db = new Models.MyDB();
         Models.OrderService orderService = new Models.OrderService();
 
         // GET: Order
@@ -44,45 +44,67 @@ namespace MyProject_D20170331.Controllers
         }
 
 
+        public ActionResult InsertOrder()
+        {
+            DropDown_EmpName();
+            DropDown_ShipName();
+            DropDown_CustName();
+            return View();
+        }
+
+        [HttpPost]
+        public void InsertOrder(Models.Orders order)
+        {
+            orderService.SaveOrder(order);
+        }
+
+        public JsonResult getProduct()
+        {
+            return this.Json(orderService.GetProduct(),JsonRequestBehavior.AllowGet);
+        }
+
         public void DropDown_EmpName()
         {
-            List<SelectListItem> result = new List<SelectListItem>();
-            var tmp= orderService.GetEmpName().ToArray();
+            ViewBag.EmpName = getResult(orderService.GetEmpName().ToArray());
+        }
+        
+        public void DropDown_ShipName()
+        {
+            ViewBag.ShipCompany = getResult(orderService.GetShipCompany().ToArray());
+        }
 
-            for (int i = -1; i < tmp.Length; i++)
+        public void DropDown_CustName()
+        {
+            ViewBag.CustName = getResult(orderService.GetCustName().ToArray());
+        }
+
+        public List<SelectListItem> getResult(String[] listStr)
+        {
+            List<SelectListItem> result = new List<SelectListItem>();
+            string value="";
+            string[] MySplit= { };
+            for (int i = -1; i < listStr.Length; i++)
             {
-                string value = (i + 1).ToString();
-                string text = (i == -1) ? text = string.Empty : text = tmp[i];
-                
+                if (i != -1)
+                {
+                     MySplit = listStr[i].Split(',');
+                     value = MySplit[0];
+                }
+                else
+                {
+                    value = "0";
+                }
+               
+                string text = (i == -1) ? text = string.Empty : text = MySplit[1];
+
                 result.Add(new SelectListItem
                 {
-                    Value= value,
+                    Value = value,
                     Text = text
                 });
             }
-            
-            ViewBag.EmpName = result;
-        }
 
-
-        public void DropDown_ShipName()
-        {
-            List<SelectListItem> result = new List<SelectListItem>();
-            var tmp = orderService.GetShipCompany().ToArray();
-
-            for (int i = -1; i < tmp.Length; i++)
-            {
-                var value = (i + 1).ToString();
-                string text = (i == -1) ? text = string.Empty : text = tmp[i];
-
-                result.Add(new SelectListItem
-                {
-                    Value=value,
-                    Text=text
-                });
-            }
-
-            ViewBag.ShipCompany = result;
+            return result;
         }
 
     }

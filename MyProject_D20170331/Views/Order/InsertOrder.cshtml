@@ -1,0 +1,211 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>InsertOrder</title>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div> 
+        <div class="container">
+            <h3>新增訂單</h3>
+            <table class="table table-bordered">
+                <tr>
+                    <td><span style="color:red">*</span>客戶名稱</td>
+                    <td colspan="3">
+                        @Html.DropDownList("CustName", (List<SelectListItem>)ViewBag.CustName)
+                    </td>
+                </tr>
+                <tr>
+                    <td><span style="color:red">*</span>負責員工名稱</td>
+                    <td colspan="3">
+                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)
+                    </td>
+                </tr>
+                <tr>
+                    <td><span style="color:red">*</span>訂單日期</td>
+                    <td >
+                        <input id="OrderDate" type="date">
+                    </td>
+                    <td><span style="color:red">*</span>需要日期</td>
+                    <td >
+                        <input id="RequireDate" type="date">
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨日期</td>
+                    <td colspan="3">
+                        <input id="ShipDate" type="date">
+                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨公司名稱</td>
+                    <td colspan="3">
+                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany)
+                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
+                    </td>
+                </tr>
+                <tr>
+                    <td>運費</td>
+                    <td colspan="3">
+                        @Html.TextBox("Freight")
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨國家</td>
+                    <td>
+                        @Html.TextBox("ShipCountry")
+                    </td>
+                    <td>出貨城市</td>
+                    <td>
+                        @Html.TextBox("ShipCity")
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨地區</td>
+                    <td>
+                        @Html.TextBox("ShipRegion")
+                    </td>
+                    <td>郵遞區號</td>
+                    <td>
+                        @Html.TextBox("ShipPostalCode")
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨地址</td>
+                    <td>
+                        @Html.TextBox("ShipAddress")
+                    </td>
+                    <td>出貨說明</td>
+                    <td>
+                        @Html.TextBox("ShipName")
+                    </td>
+                </tr>
+                <tr>
+                    <td>訂單金額總計</td>
+                    <td colspan="3"></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        <input id="SaveData"type="button"   value="存檔" >
+                        <input id="beforePage" type="button"  value="回前一頁" />
+                    </td>
+
+                </tr>
+            </table>
+
+            <h3>訂單明細</h3>
+            <input id="addOrderDetail" type="button" value="+新增商品" />
+            <table id="tab" class="table table-bordered">
+                <tbody id="tab-tbody">
+                    <tr>
+                        <td>商品</td>
+                        <td>單價</td>
+                        <td>數量</td>
+                        <td>小計</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+
+        $(document).ready(function () {
+            $("#SaveData").click(function () {
+                $.ajax({
+                    type:'post',
+                    utl:'@Url.Action("InsertOrder")',
+                    data: {
+                        CustomerID: $('#CustName option:selected').val(),
+                        EmployeeID: $('#EmpName option:selected').val(),
+                        OrderDate: $('#OrderDate').val(),
+                        RequiredDate: $('#RequireDate').val(),
+                        ShippedDate: $('#ShipDate').val(),
+                        ShipperID: $('#ShipCompany option:selected').val(),
+                        Freight: $('#Freight').val(),
+                        ShipCountry: $('#ShipCountry').val(),
+                        ShipCity: $('#ShipCity').val(),
+                        ShipRegion: $('#ShipRegion').val(),
+                        ShipPostalCode: $('#ShipPostalCode').val(),
+                        ShipAddress: $('#ShipAddress').val(),
+                        ShipName: $('#ShipName').val()
+                    }, success: function () {
+                        alert("success");
+
+                    }, error: function () { alert("Error"); }
+                });
+            });
+        });
+
+
+
+        document.getElementById("beforePage").onclick = function () {
+            location.href = "/Order/QueryOrder";
+        };
+
+        document.getElementById("addOrderDetail").onclick = function () {
+            var Tr = document.createElement("tr");
+            var Td_pro = document.createElement("td");
+            var Td_price = document.createElement("td");
+            var Td_quantity = document.createElement("td");
+            var Td_sum = document.createElement("td");
+            var Td_cancel = document.createElement("td");
+
+
+            var selectProduct = document.createElement("select");
+            selectProduct.setAttribute("class", "selectProdu");
+            var option_0 = document.createElement("option");
+            option_0.text = "";
+            option_0.value = 0;
+            selectProduct.appendChild(option_0);
+            
+            $(document).ready(function () {
+                $.get('@Url.Action("getProduct")', function (result) {
+                    $.each(result, function (i, field) {
+                        var Myfield = field.split(',');
+                        $(".selectProdu").append("<option value='" + Myfield[0] + "'>" + Myfield[1] + "</option>");    
+                    });
+                });
+            });
+
+            Td_pro.appendChild(selectProduct);
+
+            var TextBox_price = document.createElement("input");
+            TextBox_price.type = "text";
+            Td_price.appendChild(TextBox_price);
+
+            var TextBox_quantity = document.createElement("input");
+            TextBox_quantity.type = "text";
+            Td_quantity.appendChild(TextBox_quantity);
+
+            var Btn_cancel = document.createElement("button");
+            Btn_cancel.appendChild(document.createTextNode("取消"));
+            Td_cancel.appendChild(Btn_cancel);
+
+            Tr.appendChild(Td_pro);
+            Tr.appendChild(Td_price);
+            Tr.appendChild(Td_quantity);
+            Tr.appendChild(Td_sum);
+            Tr.appendChild(Td_cancel);
+
+            document.getElementById("tab-tbody").appendChild(Tr);
+        };
+
+    </script>
+</body>
+</html>

@@ -187,6 +187,7 @@
     </Content>
     <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="Views\Order\QueryOrder.cshtml" />
+    <Content Include="Views\Order\InsertOrder.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
