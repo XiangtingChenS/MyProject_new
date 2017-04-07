@@ -119,8 +119,8 @@ namespace MyProject_D20170331.Models
                 {
                     OrderID = item.OrderID,
                     CustomerName = item.CompName,
-                    OrderDate = item.OrderDate.Date.ToString(),
-                    ShippedDate = item.ShippedDate.ToString()
+                    OrderDate = item.OrderDate.ToString(),
+                    ShippedDate =item.ShippedDate.ToString()
                 };
                 result.Add(orderModel);
             }
@@ -130,28 +130,40 @@ namespace MyProject_D20170331.Models
         }
 
 
-        public void SaveOrder(Models.Orders order)
+        public void SaveOrder(ModelsAdd.OrderModel MyOM)
         {
-            Orders o = new Orders()
+            Orders order = new Orders()
             {
-                CustomerID=order.CustomerID,
-                EmployeeID=order.EmployeeID,
-                OrderDate=order.OrderDate,
-                RequiredDate=order.RequiredDate,
-                ShippedDate=order.ShippedDate,
-                ShipperID=order.ShipperID,
-                Freight=order.Freight,
-                ShipName=order.ShipName,
-                ShipAddress=order.ShipAddress,
-                ShipCity=order.ShipCity,
-                ShipRegion=order.ShipRegion,
-                ShipPostalCode=order.ShipPostalCode,
-                ShipCountry=order.ShipCountry
-
+                CustomerID= MyOM.CustomerID,
+                EmployeeID= MyOM.EmployeeID,
+                OrderDate=Convert.ToDateTime(MyOM.OrderDate),
+                RequiredDate=Convert.ToDateTime(MyOM.RequiredDate),
+                ShippedDate=Convert.ToDateTime(MyOM.ShippedDate),
+                ShipperID= MyOM.ShipperID,
+                Freight= MyOM.Freight,
+                ShipName= MyOM.ShipName,
+                ShipAddress= MyOM.ShipAddress,
+                ShipCity= MyOM.ShipCity,
+                ShipRegion= MyOM.ShipRegion,
+                ShipPostalCode= MyOM.ShipPostalCode,
+                ShipCountry= MyOM.ShipCountry
+                
             };
-       //     db.Orders.Add(o);
+            db.Orders.Add(order);
 
-        //    db.SaveChanges();
+
+            for (int i = 0; i < MyOM.ODitem.Length; i++)
+            {
+                OrderDetails OD = new OrderDetails()
+                {
+                    ProductID = MyOM.ODitem[i],
+                    UnitPrice = MyOM.ODprice[i],
+                    Qty = MyOM.ODquantity[i]
+                };
+                order.OrderDetails.Add(OD);
+            }
+
+            db.SaveChanges();
         }
 
     }

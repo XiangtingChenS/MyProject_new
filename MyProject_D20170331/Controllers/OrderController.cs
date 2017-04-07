@@ -26,6 +26,7 @@ namespace MyProject_D20170331.Controllers
 
 
         [HttpPost]
+        //型態要記得改
         public JsonResult QueryOrder(string OrderID, string CustomerName,string EmployeeName, string ShipCompanyName, string OrderDate, string RequireDate, string ShipDate)
         {
             DropDown_EmpName();
@@ -53,7 +54,7 @@ namespace MyProject_D20170331.Controllers
         }
 
         [HttpPost]
-        public void InsertOrder(Models.Orders order)
+        public void InsertOrder(ModelsAdd.OrderModel order)
         {
             orderService.SaveOrder(order);
         }

@@ -124,35 +124,49 @@
     </div>
 
     <script>
+         
 
-        $(document).ready(function () {
-            $("#SaveData").click(function () {
-                $.ajax({
-                    type:'post',
-                    utl:'@Url.Action("InsertOrder")',
-                    data: {
-                        CustomerID: $('#CustName option:selected').val(),
-                        EmployeeID: $('#EmpName option:selected').val(),
-                        OrderDate: $('#OrderDate').val(),
-                        RequiredDate: $('#RequireDate').val(),
-                        ShippedDate: $('#ShipDate').val(),
-                        ShipperID: $('#ShipCompany option:selected').val(),
-                        Freight: $('#Freight').val(),
-                        ShipCountry: $('#ShipCountry').val(),
-                        ShipCity: $('#ShipCity').val(),
-                        ShipRegion: $('#ShipRegion').val(),
-                        ShipPostalCode: $('#ShipPostalCode').val(),
-                        ShipAddress: $('#ShipAddress').val(),
-                        ShipName: $('#ShipName').val()
-                    }, success: function () {
-                        alert("success");
+        document.getElementById("SaveData").onclick = function () {
+            var ODitem = [], ODprice = [], ODquantity = [];
 
-                    }, error: function () { alert("Error"); }
-                });
+            var DomProducts = document.getElementsByClassName("DomProductSelect");
+            var DomPrice = document.getElementsByClassName("DomProductPrice");
+            var DomQuantuty = document.getElementsByClassName("DomProductQuantity");
+            for (i = 0; i < DomProducts.length; i++)
+            {
+                ODitem.push(DomProducts[i].value);
+                ODprice.push(DomPrice[i].value);
+                ODquantity.push(DomQuantuty[i].value);
+
+            }
+
+            $.ajax({
+                type: 'post',
+                utl: '@Url.Action("InsertOrder")',
+                data: {
+                    CustomerID: $('#CustName option:selected').val(),
+                    EmployeeID: $('#EmpName option:selected').val(),
+                    OrderDate: $('#OrderDate').val(),
+                    RequiredDate: $('#RequireDate').val(),
+                    ShippedDate: $('#ShipDate').val(),
+                    ShipperID: $('#ShipCompany option:selected').val(),
+                    Freight: $('#Freight').val(),
+                    ShipCountry: $('#ShipCountry').val(),
+                    ShipCity: $('#ShipCity').val(),
+                    ShipRegion: $('#ShipRegion').val(),
+                    ShipPostalCode: $('#ShipPostalCode').val(),
+                    ShipAddress: $('#ShipAddress').val(),
+                    ShipName: $('#ShipName').val(),
+                    ODitem: ODitem,
+                    ODprice: ODprice,
+                    ODquantity: ODquantity
+
+                }, success: function () {
+                    alert("success");
+
+                }, error: function () { alert("Error"); }
             });
-        });
-
-
+        };
 
         document.getElementById("beforePage").onclick = function () {
             location.href = "/Order/QueryOrder";
@@ -168,7 +182,7 @@
 
 
             var selectProduct = document.createElement("select");
-            selectProduct.setAttribute("class", "selectProdu");
+            selectProduct.setAttribute("class", "DomProductSelect");
             var option_0 = document.createElement("option");
             option_0.text = "";
             option_0.value = 0;
@@ -178,7 +192,7 @@
                 $.get('@Url.Action("getProduct")', function (result) {
                     $.each(result, function (i, field) {
                         var Myfield = field.split(',');
-                        $(".selectProdu").append("<option value='" + Myfield[0] + "'>" + Myfield[1] + "</option>");    
+                        $(".DomProductSelect").append("<option value='" + Myfield[0] + "'>" + Myfield[1] + "</option>");
                     });
                 });
             });
@@ -187,10 +201,12 @@
 
             var TextBox_price = document.createElement("input");
             TextBox_price.type = "text";
+            TextBox_price.setAttribute("class", "DomProductPrice");
             Td_price.appendChild(TextBox_price);
 
             var TextBox_quantity = document.createElement("input");
             TextBox_quantity.type = "text";
+            TextBox_quantity.setAttribute("class", "DomProductQuantity");
             Td_quantity.appendChild(TextBox_quantity);
 
             var Btn_cancel = document.createElement("button");
