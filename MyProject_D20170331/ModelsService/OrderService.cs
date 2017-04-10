@@ -84,6 +84,20 @@ namespace MyProject_D20170331.Models
             return result;
         }
 
+        public double GetProductPrice(int index)
+        {
+
+            var price = db.Products
+                   .Where(x => x.ProductID == index)
+                   .Select(x => new
+                   {
+                       x.UnitPrice
+                   })
+                   .ToArray();
+
+            return Convert.ToDouble(price[0].UnitPrice);
+        }
+
         //這裡要再改
         public List<OrderModel> GetQueryResult(int OrderID, string CompanyName, string EmployeeName, string ShipCompanyName, DateTime OrderDate, DateTime RequireDate, DateTime ShipDate)
         {
@@ -130,41 +144,61 @@ namespace MyProject_D20170331.Models
         }
 
 
-        public void SaveOrder(ModelsAdd.OrderModel MyOM)
+        public void SaveOrder(OrderModel MyOM)
         {
             Orders order = new Orders()
             {
-                CustomerID= MyOM.CustomerID,
-                EmployeeID= MyOM.EmployeeID,
-                OrderDate=Convert.ToDateTime(MyOM.OrderDate),
-                RequiredDate=Convert.ToDateTime(MyOM.RequiredDate),
-                ShippedDate=Convert.ToDateTime(MyOM.ShippedDate),
-                ShipperID= MyOM.ShipperID,
-                Freight= MyOM.Freight,
-                ShipName= MyOM.ShipName,
-                ShipAddress= MyOM.ShipAddress,
-                ShipCity= MyOM.ShipCity,
-                ShipRegion= MyOM.ShipRegion,
-                ShipPostalCode= MyOM.ShipPostalCode,
-                ShipCountry= MyOM.ShipCountry
-                
+                CustomerID = MyOM.CustomerID,
+                EmployeeID = MyOM.EmployeeID,
+                OrderDate = Convert.ToDateTime(MyOM.OrderDate),
+                RequiredDate = Convert.ToDateTime(MyOM.RequiredDate),
+              //  ShippedDate = Convert.ToDateTime(MyOM.ShippedDate),
+                ShipperID = MyOM.ShipperID,
+           //     Freight = MyOM.Freight,
+                ShipName = MyOM.ShipName,
+                ShipAddress = MyOM.ShipAddress,
+                ShipCity = MyOM.ShipCity,
+                ShipRegion = MyOM.ShipRegion,
+                ShipPostalCode = MyOM.ShipPostalCode,
+                ShipCountry = MyOM.ShipCountry
+
             };
             db.Orders.Add(order);
 
 
-            for (int i = 0; i < MyOM.ODitem.Length; i++)
+            if (MyOM.ODitem != null)
             {
-                OrderDetails OD = new OrderDetails()
+                for (int i = 0; i < MyOM.ODitem.Length; i++)
                 {
-                    ProductID = MyOM.ODitem[i],
-                    UnitPrice = MyOM.ODprice[i],
-                    Qty = MyOM.ODquantity[i]
-                };
-                order.OrderDetails.Add(OD);
+                    OrderDetails OD = new OrderDetails()
+                    {
+                        ProductID = MyOM.ODitem[i],
+                        UnitPrice = MyOM.ODprice[i],
+                        Qty = MyOM.ODquantity[i]
+                    };
+                    order.OrderDetails.Add(OD);
+                }
             }
+            db.SaveChanges();
+        }
+
+
+
+        public void DeleteQueryResult(int id)
+        {
+            var del_OD = db.OrderDetails
+                       .Where(x => x.OrderID == id)
+                       .ToList();
+            db.OrderDetails.RemoveRange(del_OD);
+
+            var del_Order = db.Orders
+                           .Where(x => x.OrderID == id)
+                           .ToList();
+            db.Orders.RemoveRange(del_Order);
 
             db.SaveChanges();
         }
+      
 
     }
 }

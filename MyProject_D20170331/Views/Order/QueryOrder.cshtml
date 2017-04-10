@@ -122,7 +122,7 @@
                         }
                         $.each(result, function (index, field) {
 
-                            $("#tab-tbody").append("<tr><td>" + field.OrderID + "</td><td>" + field.CustomerName + "</td><td>" + field.OrderDate + "</td><td>" + field.ShippedDate + "</td><td><button>修改</button></td><td><button>刪除</button></td></tr>");
+                            $("#tab-tbody").append("<tr><td class='orderId_class'>" + field.OrderID + "</td><td>" + field.CustomerName + "</td><td>" + field.OrderDate + "</td><td>" + field.ShippedDate + "</td><td><button>修改</button></td><td><button onclick='deleteOrder(this)'>刪除</button></td></tr>");
                         });
                     },
                     error: function () { alert("Error"); }
@@ -142,6 +142,26 @@
 
         document.getElementById("MyInsertOrder").onclick = function () {
             location.href = "/Order/InsertOrder";
+        }
+
+        function deleteOrder(thisObject)
+        {
+            var index = thisObject.parentNode.parentNode.rowIndex;
+            var orderId = document.getElementsByClassName("orderId_class")[index-1].innerHTML;
+
+            $.ajax({
+                type: 'post',
+                url: '@Url.Action("QueryOrder_Delete")',
+                data: {
+                    OrderID:orderId
+                },
+                success: function () {
+                    document.getElementById("tab").deleteRow(index);
+                },
+                error: function() {
+                    alert("Delete Error");
+                }
+            });
         }
 
         //$(document).ready(function () {

@@ -93,7 +93,7 @@
                 </tr>
                 <tr>
                     <td>訂單金額總計</td>
-                    <td colspan="3"></td>
+                    <td colspan="3"><span id="allTotal">$ 0</span></td>
                 </tr>
 
                 <tr>
@@ -134,9 +134,12 @@
             var DomQuantuty = document.getElementsByClassName("DomProductQuantity");
             for (i = 0; i < DomProducts.length; i++)
             {
-                ODitem.push(DomProducts[i].value);
-                ODprice.push(DomPrice[i].value);
-                ODquantity.push(DomQuantuty[i].value);
+                if (DomProducts[i].value != "")
+                {
+                    ODitem.push(DomProducts[i].value);
+                    ODprice.push(DomPrice[i].value);
+                    ODquantity.push(DomQuantuty[i].value);
+                }
 
             }
 
@@ -177,12 +180,34 @@
             var Td_pro = document.createElement("td");
             var Td_price = document.createElement("td");
             var Td_quantity = document.createElement("td");
-            var Td_sum = document.createElement("td");
+            var Td_total = document.createElement("td");
             var Td_cancel = document.createElement("td");
-
 
             var selectProduct = document.createElement("select");
             selectProduct.setAttribute("class", "DomProductSelect");
+            selectProduct.addEventListener("change", function () {
+                var thisObject = this;
+                var index = this.selectedIndex;
+                var value = this.getElementsByTagName("option")[index].value;
+                var rowIndex = this.parentNode.parentNode.rowIndex;
+                if (value != 0) {
+                    $.ajax({
+                        type: 'post',
+                        url: '@Url.Action("getProductPrice")',
+                        data: {
+                            index: value
+                        }, success: function (result) {
+                            document.getElementsByClassName("DomProductPrice")[rowIndex - 1].value = result;
+                            ChangeTotal(thisObject);
+                        }, error: function () {
+                            alert("error");
+                        }
+                    });
+                } else {
+                    document.getElementsByClassName("DomProductPrice")[rowIndex - 1].value = 0;
+                    ChangeTotal(thisObject);
+                }
+            });
             var option_0 = document.createElement("option");
             option_0.text = "";
             option_0.value = 0;
@@ -201,26 +226,85 @@
 
             var TextBox_price = document.createElement("input");
             TextBox_price.type = "text";
+            TextBox_price.value = 0;
             TextBox_price.setAttribute("class", "DomProductPrice");
+            TextBox_price.addEventListener("change", function () {
+                ChangeTotal(this);
+            });
             Td_price.appendChild(TextBox_price);
 
             var TextBox_quantity = document.createElement("input");
             TextBox_quantity.type = "text";
+            TextBox_quantity.value = 0;
             TextBox_quantity.setAttribute("class", "DomProductQuantity");
+            TextBox_quantity.addEventListener("change", function () {
+                ChangeTotal(this);
+            });
+
             Td_quantity.appendChild(TextBox_quantity);
 
+            var span_total = document.createElement("span");
+            span_total.setAttribute("class", "DomTotal");
+            span_total.appendChild(document.createTextNode("0"));
+            Td_total.appendChild(span_total);
+
             var Btn_cancel = document.createElement("button");
+            Btn_cancel.setAttribute("class", "DomBtnCancel");
+            Btn_cancel.addEventListener("click", function () {
+                var index = this.parentNode.parentNode.rowIndex;
+                document.getElementById("tab").deleteRow(index);
+                doAllTotal();
+            });
             Btn_cancel.appendChild(document.createTextNode("取消"));
             Td_cancel.appendChild(Btn_cancel);
 
             Tr.appendChild(Td_pro);
             Tr.appendChild(Td_price);
             Tr.appendChild(Td_quantity);
-            Tr.appendChild(Td_sum);
+            Tr.appendChild(Td_total);
             Tr.appendChild(Td_cancel);
 
             document.getElementById("tab-tbody").appendChild(Tr);
         };
+
+        function ChangeTotal(thisObject)
+        {
+            var index = thisObject.parentNode.parentNode.rowIndex - 1;
+           
+            var price = document.getElementsByClassName("DomProductPrice")[index];
+            if (price.value == "") price.value = 0;
+            var quantity = document.getElementsByClassName("DomProductQuantity")[index];
+            if (quantity.value == "") quantity.value = 0;
+
+            var Total= document.getElementsByClassName("DomTotal")[index];
+            Total.innerHTML = price.value * quantity.value;
+            
+            doAllTotal();
+             
+        }
+
+        function doAllTotal()
+        {
+            var domTotal = document.getElementsByClassName("DomTotal");
+            var sum = 0;
+            for (i = 0; i < domTotal.length; i++) {
+                sum += parseFloat(domTotal[i].innerHTML);
+            }
+            document.getElementById("allTotal").innerHTML = "$ " + sum;
+        }
+
+
+
+        //function deleteRow(node)
+        //{
+        //    var index = node.parentNode.parentNode.rowIndex;
+        //    alert(index);
+        //}
+
+        //document.getElementById("DomBtnCancel").onclick = function () {
+        //    alert("asd");
+
+        //};
 
     </script>
 </body>

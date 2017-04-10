@@ -44,6 +44,12 @@ namespace MyProject_D20170331.Controllers
             return this.Json(orderService.GetQueryResult(Convert.ToInt32(OrderID) , CustomerName, EmployeeName, ShipCompanyName, ordereDate, requireDate, shipeDate),JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public void QueryOrder_Delete(int OrderID)
+        {
+            orderService.DeleteQueryResult(OrderID);
+        }
+
 
         public ActionResult InsertOrder()
         {
@@ -56,7 +62,14 @@ namespace MyProject_D20170331.Controllers
         [HttpPost]
         public void InsertOrder(ModelsAdd.OrderModel order)
         {
+         
             orderService.SaveOrder(order);
+        }
+
+        [HttpPost]
+        public JsonResult getProductPrice(int index)
+        {
+            return this.Json(orderService.GetProductPrice(index),JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult getProduct()

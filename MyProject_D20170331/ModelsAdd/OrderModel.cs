@@ -10,7 +10,7 @@ namespace MyProject_D20170331.ModelsAdd
         public int OrderID { get; set; }
         public string CustomerName { get; set; }
 
-        //public Models.Orders Orders { get; set; }
+        //public Models.Orders Orders = new Models.Orders();
         //public Models.OrderDetails[] OD { get; set; }
         //   public string OrderDate { get; set; }
         //  public string ShippedDate { get; set; }
