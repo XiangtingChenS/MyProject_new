@@ -121,7 +121,6 @@
                             tag.deleteRow(i);
                         }
                         $.each(result, function (index, field) {
-
                             $("#tab-tbody").append("<tr><td class='orderId_class'>" + field.OrderID + "</td><td>" + field.CustomerName + "</td><td>" + field.OrderDate + "</td><td>" + field.ShippedDate + "</td><td><button>修改</button></td><td><button onclick='deleteOrder(this)'>刪除</button></td></tr>");
                         });
                     },

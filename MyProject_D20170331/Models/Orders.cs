@@ -40,7 +40,7 @@ namespace MyProject_D20170331.Models
         [Required]
         [StringLength(60)]
         public string ShipAddress { get; set; }
-
+    
         [Required]
         [StringLength(15)]
         public string ShipCity { get; set; }

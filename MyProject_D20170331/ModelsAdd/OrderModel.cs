@@ -30,7 +30,7 @@ namespace MyProject_D20170331.ModelsAdd
         public string ShipName { get; set; }
 
         public int[] ODitem { get; set;}
-        public int[] ODprice { get; set; }
+        public decimal[] ODprice { get; set; }
         public short[] ODquantity { get; set; }
     }
 }

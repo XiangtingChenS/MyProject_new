@@ -134,7 +134,7 @@ namespace MyProject_D20170331.Models
                     OrderID = item.OrderID,
                     CustomerName = item.CompName,
                     OrderDate = item.OrderDate.ToString(),
-                    ShippedDate =item.ShippedDate.ToString()
+                   ShippedDate =item.ShippedDate.ToString()
                 };
                 result.Add(orderModel);
             }
@@ -146,15 +146,22 @@ namespace MyProject_D20170331.Models
 
         public void SaveOrder(OrderModel MyOM)
         {
+            DateTime? shipDate = null;
+            if (MyOM.ShippedDate != null)
+            {
+                shipDate = Convert.ToDateTime(MyOM.ShippedDate);
+            }
+
             Orders order = new Orders()
             {
                 CustomerID = MyOM.CustomerID,
                 EmployeeID = MyOM.EmployeeID,
                 OrderDate = Convert.ToDateTime(MyOM.OrderDate),
                 RequiredDate = Convert.ToDateTime(MyOM.RequiredDate),
-              //  ShippedDate = Convert.ToDateTime(MyOM.ShippedDate),
+                //  ShippedDate = Convert.ToDateTime(MyOM.ShippedDate
+                ShippedDate = shipDate,
                 ShipperID = MyOM.ShipperID,
-           //     Freight = MyOM.Freight,
+                Freight = MyOM.Freight,
                 ShipName = MyOM.ShipName,
                 ShipAddress = MyOM.ShipAddress,
                 ShipCity = MyOM.ShipCity,
@@ -166,7 +173,7 @@ namespace MyProject_D20170331.Models
             db.Orders.Add(order);
 
 
-            if (MyOM.ODitem != null)
+            if (MyOM.ODitem != null && MyOM.ODprice !=null && MyOM.ODquantity!=null)
             {
                 for (int i = 0; i < MyOM.ODitem.Length; i++)
                 {

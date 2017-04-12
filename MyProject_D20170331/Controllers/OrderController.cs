@@ -62,7 +62,6 @@ namespace MyProject_D20170331.Controllers
         [HttpPost]
         public void InsertOrder(ModelsAdd.OrderModel order)
         {
-         
             orderService.SaveOrder(order);
         }
 
