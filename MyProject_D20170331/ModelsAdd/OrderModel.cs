@@ -21,7 +21,7 @@ namespace MyProject_D20170331.ModelsAdd
         public string RequiredDate { get; set; }
         public string ShippedDate { get; set; }
         public int ShipperID { get; set; }
-        public int Freight { get; set; }
+        public decimal Freight { get; set; }
         public string ShipCountry { get; set; }
         public string ShipCity { get; set; }
         public string ShipRegion { get; set; }

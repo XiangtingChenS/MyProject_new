@@ -15,7 +15,7 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div> 
+    <div>
         <div class="container">
             <h3>新增訂單</h3>
             <table class="table table-bordered">
@@ -33,11 +33,11 @@
                 </tr>
                 <tr>
                     <td><span style="color:red">*</span>訂單日期</td>
-                    <td >
+                    <td>
                         <input id="OrderDate" type="date">
                     </td>
                     <td><span style="color:red">*</span>需要日期</td>
-                    <td >
+                    <td>
                         <input id="RequireDate" type="date">
                     </td>
                 </tr>
@@ -99,8 +99,8 @@
                 <tr>
                     <td></td>
                     <td colspan="3">
-                        <input id="SaveData"type="button"   value="存檔" >
-                        <input id="beforePage" type="button"  value="回前一頁" />
+                        <input id="SaveData" type="button" value="存檔">
+                        <input id="beforePage" type="button" value="回前一頁" />
                     </td>
 
                 </tr>
@@ -124,22 +124,19 @@
     </div>
 
     <script>
-         
+
 
         document.getElementById("SaveData").onclick = function () {
-            if (document.getElementById("CustName").value == 0 || document.getElementById("EmpName").value==0 || document.getElementById("OrderDate").value == "" || document.getElementById("RequireDate").value == "")
-            {
+            if (document.getElementById("CustName").value == 0 || document.getElementById("EmpName").value == 0 || document.getElementById("OrderDate").value == "" || document.getElementById("RequireDate").value == "") {
                 alert("請輸入必填欄位");
-            }  
-            else
-            {
+            }
+            else {
                 saveData();
             }
         };
 
 
-        function saveData()
-        {
+        function saveData() {
             var ODitem = [], ODprice = [], ODquantity = [];
 
             var DomProducts = document.getElementsByClassName("DomProductSelect");
@@ -223,7 +220,7 @@
             option_0.text = "";
             option_0.value = 0;
             selectProduct.appendChild(option_0);
-            
+
             $(document).ready(function () {
                 $.get('@Url.Action("getProduct")', function (result) {
                     $.each(result, function (i, field) {
@@ -278,24 +275,21 @@
             document.getElementById("tab-tbody").appendChild(Tr);
         };
 
-        function ChangeTotal(thisObject)
-        {
+        function ChangeTotal(thisObject) {
             var index = thisObject.parentNode.parentNode.rowIndex - 1;
-           
+
             var price = document.getElementsByClassName("DomProductPrice")[index];
             if (price.value == "") price.value = 0;
             var quantity = document.getElementsByClassName("DomProductQuantity")[index];
             if (quantity.value == "") quantity.value = 0;
 
-            var Total= document.getElementsByClassName("DomTotal")[index];
+            var Total = document.getElementsByClassName("DomTotal")[index];
             Total.innerHTML = price.value * quantity.value;
-            
+
             doAllTotal();
-             
         }
 
-        function doAllTotal()
-        {
+        function doAllTotal() {
             var domTotal = document.getElementsByClassName("DomTotal");
             var sum = 0;
             for (i = 0; i < domTotal.length; i++) {

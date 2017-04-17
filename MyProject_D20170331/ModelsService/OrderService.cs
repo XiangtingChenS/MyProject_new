@@ -190,7 +190,6 @@ namespace MyProject_D20170331.Models
         }
 
 
-
         public void DeleteQueryResult(int id)
         {
             var del_OD = db.OrderDetails
@@ -205,7 +204,54 @@ namespace MyProject_D20170331.Models
 
             db.SaveChanges();
         }
-      
+
+
+        public OrderModel GetUpdateData(int OrderID)
+        {
+            var Order = db.Orders
+                       .Where(x => x.OrderID == OrderID)
+                       .ToArray();
+
+            var OD = db.OrderDetails
+                   .Where(x => x.OrderID == OrderID)
+                   .ToArray();
+
+            OrderModel om = new OrderModel();
+            #region add order 
+            om.OrderID = Order[0].OrderID;
+            om.CustomerID = Order[0].CustomerID;
+            om.EmployeeID = Order[0].EmployeeID;
+           // om.OrderDate = Order[0].OrderDate.ToShortDateString();
+           // om.RequiredDate = Order[0].RequiredDate.ToShortDateString();
+           //om.ShippedDate = Order[0].ShippedDate.ToShortDateString();
+            om.OrderDate = Order[0].OrderDate.ToString();
+            om.RequiredDate = Order[0].RequiredDate.ToString();
+            om.ShippedDate = Order[0].ShippedDate.ToString();
+
+            om.ShipperID = Order[0].ShipperID;
+            om.Freight = Order[0].Freight;
+            om.ShipName = Order[0].ShipName;
+            om.ShipAddress = Order[0].ShipAddress;
+            om.ShipCity = Order[0].ShipCity;
+            om.ShipRegion = Order[0].ShipRegion;
+            om.ShipPostalCode = Order[0].ShipPostalCode;
+            om.ShipCountry = Order[0].ShipCountry;
+            #endregion
+
+            om.ODitem=new int[OD.Length];
+            om.ODprice = new decimal[OD.Length];
+            om.ODquantity= new short[OD.Length];
+
+
+            for (int i = 0; i < OD.Length; i++)
+            {
+                om.ODitem[i] = OD[i].ProductID;
+                om.ODprice[i] = OD[i].UnitPrice;
+                om.ODquantity[i] = OD[i].Qty;
+            }
+
+            return om;
+        }
 
     }
 }

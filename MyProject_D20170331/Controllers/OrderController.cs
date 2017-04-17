@@ -71,6 +71,23 @@ namespace MyProject_D20170331.Controllers
             return this.Json(orderService.GetProductPrice(index),JsonRequestBehavior.AllowGet);
         }
 
+
+        public ActionResult UpdateOrder(int? OrderID)
+        {
+            DropDown_EmpName();
+            DropDown_ShipName();
+            DropDown_CustName();
+
+            ViewBag.UpdateOrderId = OrderID;
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult UpdateOrder(int OrderID)
+        {
+            return this.Json(orderService.GetUpdateData(OrderID), JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult getProduct()
         {
             return this.Json(orderService.GetProduct(),JsonRequestBehavior.AllowGet);

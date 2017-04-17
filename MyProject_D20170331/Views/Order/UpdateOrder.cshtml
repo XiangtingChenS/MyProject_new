@@ -1,0 +1,276 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdateOrder</title>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+
+</head>
+<body>
+    <div>
+        <div class="container">
+            <h3>新增訂單</h3>
+            <table class="table table-bordered">
+                <tr>
+                    <td>訂單編號</td>
+                    <td colspan="3">
+                        @Html.TextBox("OrderId")
+                    </td>
+                </tr>
+                <tr>
+                    <td><span style="color:red">*</span>客戶名稱</td>
+                    <td colspan="3">
+                        @Html.DropDownList("CustName", (List<SelectListItem>)ViewBag.CustName)
+                    </td>
+                </tr>
+                <tr>
+                    <td><span style="color:red">*</span>負責員工名稱</td>
+                    <td colspan="3">
+                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)
+                    </td>
+                </tr>
+                <tr>
+                    <td><span style="color:red">*</span>訂單日期</td>
+                    <td>
+                        <input id="OrderDate" type="date">
+                    </td>
+                    <td><span style="color:red">*</span>需要日期</td>
+                    <td>
+                        <input id="RequireDate" type="date">
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨日期</td>
+                    <td colspan="3">
+                        <input id="ShipDate" type="date">
+                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨公司名稱</td>
+                    <td colspan="3">
+                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany)
+                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
+                    </td>
+                </tr>
+                <tr>
+                    <td>運費</td>
+                    <td colspan="3">
+                        @Html.TextBox("Freight")
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨國家</td>
+                    <td>
+                        @Html.TextBox("ShipCountry")
+                    </td>
+                    <td>出貨城市</td>
+                    <td>
+                        @Html.TextBox("ShipCity")
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨地區</td>
+                    <td>
+                        @Html.TextBox("ShipRegion")
+                    </td>
+                    <td>郵遞區號</td>
+                    <td>
+                        @Html.TextBox("ShipPostalCode")
+                    </td>
+                </tr>
+                <tr>
+                    <td>出貨地址</td>
+                    <td>
+                        @Html.TextBox("ShipAddress")
+                    </td>
+                    <td>出貨說明</td>
+                    <td>
+                        @Html.TextBox("ShipName")
+                    </td>
+                </tr>
+                <tr>
+                    <td>訂單金額總計</td>
+                    <td colspan="3"><span id="allTotal">$ 0</span></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td colspan="3">
+                        <input id="SaveData" type="button" value="存檔">
+                        <input id="DeleteOrder" type="button" value="刪除本筆訂單">
+                        <input id="beforePage" type="button" value="回前一頁" />
+                    </td>
+
+                </tr>
+            </table>
+
+            <h3>訂單明細</h3>
+            <input id="addOrderDetail" type="button" value="+新增商品" />
+            <table id="tab" class="table table-bordered">
+                <tbody id="tab-tbody">
+                    <tr>
+                        <td>商品</td>
+                        <td>單價</td>
+                        <td>數量</td>
+                        <td>小計</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script>
+            $.ajax({
+                type: 'post',
+                url: '@Url.Action("UpdateOrder")',
+                data: {
+                    OrderID: '@ViewBag.UpdateOrderId'
+                }, success: function (result) {
+                    alert("ok success");
+                    console.log(result);
+
+
+
+
+                }, error: function () {
+                    alert("error");
+                }
+            });
+
+            document.getElementById("beforePage").onclick = function () {
+                location.href = "/Order/QueryOrder";
+            };
+
+
+            document.getElementById("addOrderDetail").onclick = function () {
+                var Tr = document.createElement("tr");
+                var Td_pro = document.createElement("td");
+                var Td_price = document.createElement("td");
+                var Td_quantity = document.createElement("td");
+                var Td_total = document.createElement("td");
+                var Td_cancel = document.createElement("td");
+
+                var selectProduct = document.createElement("select");
+                selectProduct.setAttribute("class", "DomProductSelect");
+                selectProduct.addEventListener("change", function () {
+                    var thisObject = this;
+                    var index = this.selectedIndex;
+                    var value = this.getElementsByTagName("option")[index].value;
+                    var rowIndex = this.parentNode.parentNode.rowIndex;
+                    if (value != 0) {
+                        $.ajax({
+                            type: 'post',
+                            url: '@Url.Action("getProductPrice")',
+                            data: {
+                                index: value
+                            }, success: function (result) {
+                                document.getElementsByClassName("DomProductPrice")[rowIndex - 1].value = result;
+                                ChangeTotal(thisObject);
+                            }, error: function () {
+                                alert("error");
+                            }
+                        });
+                    } else {
+                        document.getElementsByClassName("DomProductPrice")[rowIndex - 1].value = 0;
+                        ChangeTotal(thisObject);
+                    }
+                });
+                var option_0 = document.createElement("option");
+                option_0.text = "";
+                option_0.value = 0;
+                selectProduct.appendChild(option_0);
+
+                $(document).ready(function () {
+                    $.get('@Url.Action("getProduct")', function (result) {
+                        $.each(result, function (i, field) {
+                            var Myfield = field.split(',');
+                            $(".DomProductSelect").append("<option value='" + Myfield[0] + "'>" + Myfield[1] + "</option>");
+                        });
+                    });
+                });
+
+                Td_pro.appendChild(selectProduct);
+
+                var TextBox_price = document.createElement("input");
+                TextBox_price.type = "text";
+                TextBox_price.value = 0;
+                TextBox_price.setAttribute("class", "DomProductPrice");
+                TextBox_price.addEventListener("change", function () {
+                    ChangeTotal(this);
+                });
+                Td_price.appendChild(TextBox_price);
+
+                var TextBox_quantity = document.createElement("input");
+                TextBox_quantity.type = "text";
+                TextBox_quantity.value = 0;
+                TextBox_quantity.setAttribute("class", "DomProductQuantity");
+                TextBox_quantity.addEventListener("change", function () {
+                    ChangeTotal(this);
+                });
+
+                Td_quantity.appendChild(TextBox_quantity);
+
+                var span_total = document.createElement("span");
+                span_total.setAttribute("class", "DomTotal");
+                span_total.appendChild(document.createTextNode("0"));
+                Td_total.appendChild(span_total);
+
+                var Btn_cancel = document.createElement("button");
+                Btn_cancel.setAttribute("class", "DomBtnCancel");
+                Btn_cancel.addEventListener("click", function () {
+                    var index = this.parentNode.parentNode.rowIndex;
+                    document.getElementById("tab").deleteRow(index);
+                    doAllTotal();
+                });
+                Btn_cancel.appendChild(document.createTextNode("取消"));
+                Td_cancel.appendChild(Btn_cancel);
+
+                Tr.appendChild(Td_pro);
+                Tr.appendChild(Td_price);
+                Tr.appendChild(Td_quantity);
+                Tr.appendChild(Td_total);
+                Tr.appendChild(Td_cancel);
+
+                document.getElementById("tab-tbody").appendChild(Tr);
+            };
+
+
+            function ChangeTotal(thisObject) {
+                var index = thisObject.parentNode.parentNode.rowIndex - 1;
+
+                var price = document.getElementsByClassName("DomProductPrice")[index];
+                if (price.value == "") price.value = 0;
+                var quantity = document.getElementsByClassName("DomProductQuantity")[index];
+                if (quantity.value == "") quantity.value = 0;
+
+                var Total = document.getElementsByClassName("DomTotal")[index];
+                Total.innerHTML = price.value * quantity.value;
+
+                doAllTotal();
+            }
+
+            function doAllTotal() {
+                var domTotal = document.getElementsByClassName("DomTotal");
+                var sum = 0;
+                for (i = 0; i < domTotal.length; i++) {
+                    sum += parseFloat(domTotal[i].innerHTML);
+                }
+                document.getElementById("allTotal").innerHTML = "$ " + sum;
+            }
+
+        </script>
+
+    </div>
+</body>
+</html>
