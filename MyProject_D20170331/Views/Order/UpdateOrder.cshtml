@@ -38,8 +38,8 @@
                     <td colspan="3">
                         @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)
                     </td>
-                </tr>
-                <tr>
+                </tr> 
+                <tr> 
                     <td><span style="color:red">*</span>訂單日期</td>
                     <td>
                         <input id="OrderDate" type="date">
@@ -137,10 +137,26 @@
                 data: {
                     OrderID: '@ViewBag.UpdateOrderId'
                 }, success: function (result) {
-                    alert("ok success");
+                  
                     console.log(result);
+                    document.getElementById("CustName").value = result.CustomerID;
+                    document.getElementById("EmpName").value = result.EmployeeID;
 
+                    document.getElementById("OrderDate").value=replaceDate(result.OrderDate);
+                    document.getElementById("RequireDate").value=replaceDate(result.RequiredDate);
+                    document.getElementById("ShipDate").value = replaceDate(result.ShippedDate);
 
+                    document.getElementById("ShipCompany").value = result.ShipperID;
+                    document.getElementById("Freight").value = result.Freight;
+
+                    document.getElementById("ShipCountry").value = result.ShipCountry;
+                    document.getElementById("ShipCity").value = result.ShipCity;
+                    document.getElementById("ShipRegion").value = result.ShipRegion;
+                    document.getElementById("ShipPostalCode").value = result.ShipPostalCode;
+                    document.getElementById("ShipAddress").value = result.ShipAddress;
+                    document.getElementById("ShipName").value = result.ShipName;
+  
+                    
 
 
                 }, error: function () {
@@ -269,6 +285,22 @@
                 document.getElementById("allTotal").innerHTML = "$ " + sum;
             }
 
+
+            function replaceDate(date)
+            {
+                if (date != null) {
+                    var array = date.split("/");
+
+                    if (array[1].length<2) array[1] = "0" + array[1];
+                    if (array[2].length<2) array[2] = "0" + array[2];
+
+                    return array[0]+"-"+array[1]+"-"+array[2];
+                } else {
+                    return null;
+                }
+                    
+
+            }
         </script>
 
     </div>

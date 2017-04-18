@@ -224,9 +224,22 @@ namespace MyProject_D20170331.Models
            // om.OrderDate = Order[0].OrderDate.ToShortDateString();
            // om.RequiredDate = Order[0].RequiredDate.ToShortDateString();
            //om.ShippedDate = Order[0].ShippedDate.ToShortDateString();
-            om.OrderDate = Order[0].OrderDate.ToString();
-            om.RequiredDate = Order[0].RequiredDate.ToString();
-            om.ShippedDate = Order[0].ShippedDate.ToString();
+            om.OrderDate = Order[0].OrderDate.ToShortDateString();
+            om.RequiredDate = Order[0].RequiredDate.ToShortDateString();
+
+            DateTime tmp ;
+            if (DateTime.TryParse(Order[0].ShippedDate.ToString(), out tmp))
+            {
+                om.ShippedDate = tmp.ToShortDateString();
+            }
+            else
+            {
+                om.ShippedDate = null;
+            }
+
+            //    om.ShippedDate = Order[0].ShippedDate.ToShortDateString(); 
+       
+            //om.ShippedDate = Order[0].ShippedDate.ToString();
 
             om.ShipperID = Order[0].ShipperID;
             om.Freight = Order[0].Freight;
