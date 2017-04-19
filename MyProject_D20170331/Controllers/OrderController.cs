@@ -83,9 +83,15 @@ namespace MyProject_D20170331.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateOrder(int OrderID)
+        public JsonResult UpdateOrder_Data(int OrderID)
         {
             return this.Json(orderService.GetUpdateData(OrderID), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public void UpdateOrder_Save(ModelsAdd.OrderModel om)
+        {
+            orderService.UpdateOrder(om);
         }
 
         public JsonResult getProduct()

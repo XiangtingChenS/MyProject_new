@@ -271,5 +271,52 @@ namespace MyProject_D20170331.Models
             
         }
 
+
+        public void UpdateOrder(OrderModel om)
+        {
+            var order = db.Orders
+                      .Where(x => x.OrderID == om.OrderID)
+                      .First();
+
+            order.CustomerID = om.CustomerID;
+            order.EmployeeID = om.EmployeeID;
+            order.OrderDate = Convert.ToDateTime(om.OrderDate);
+            order.RequiredDate = Convert.ToDateTime(om.RequiredDate);
+
+            DateTime? shipDate = null;
+            if (om.ShippedDate != null)
+            {
+                shipDate = Convert.ToDateTime(om.ShippedDate);
+            }
+            order.ShippedDate = shipDate;
+
+            order.ShipperID = om.ShipperID;
+            order.Freight = om.Freight;
+            order.ShipName = om.ShipName;
+            order.ShipAddress = om.ShipAddress;
+            order.ShipCity = om.ShipCity;
+            order.ShipRegion = om.ShipRegion;
+            order.ShipPostalCode = om.ShipPostalCode;
+            order.ShipCountry = om.ShipCountry;
+
+
+            //因ProductID無法被修改，故把原本明細全砍掉，再++
+            var OD = db.OrderDetails
+                   .Where(x => x.OrderID == om.OrderID)
+                   .ToArray();
+
+            for (int i = 0; i < OD.Length; i++)
+            {
+                OD[i].ProductID = om.ODitem[i];
+                OD[i].UnitPrice = om.ODprice[i];
+                OD[i].Qty = om.ODquantity[i];
+            }
+
+
+           db.SaveChanges();
+
+
+        }
+
     }
 }

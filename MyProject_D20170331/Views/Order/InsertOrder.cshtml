@@ -153,7 +153,7 @@
 
             $.ajax({
                 type: 'post',
-                utl: '@Url.Action("InsertOrder")',
+                url: '@Url.Action("InsertOrder")',
                 data: {
                     CustomerID: $('#CustName option:selected').val(),
                     EmployeeID: $('#EmpName option:selected').val(),

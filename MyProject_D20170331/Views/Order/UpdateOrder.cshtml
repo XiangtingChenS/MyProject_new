@@ -133,7 +133,7 @@
         <script>
             $.ajax({
                 type: 'post',
-                url: '@Url.Action("UpdateOrder")',
+                url: '@Url.Action("UpdateOrder_Data")',
                 data: {
                     OrderID: '@ViewBag.UpdateOrderId'
                 }, success: function (result) {
@@ -341,14 +341,57 @@
             };
 
             document.getElementById("SaveData").onclick = function () {
-
-                document.getElementsByClassName("DomProductSelect")[0].value = 24;
-                document.getElementsByClassName("DomProductSelect")[0].onchange();
+                if (document.getElementById("CustName").value == 0 || document.getElementById("EmpName").value == 0 || document.getElementById("OrderDate").value == "" || document.getElementById("RequireDate").value == "") {
+                    alert("請輸入必填欄位");
+                }
+                else {
+                    saveData();
+                }
             };
 
 
+            function saveData() {
+                var ODitem = [], ODprice = [], ODquantity = [];
 
+                var DomProducts = document.getElementsByClassName("DomProductSelect");
+                var DomPrice = document.getElementsByClassName("DomProductPrice");
+                var DomQuantuty = document.getElementsByClassName("DomProductQuantity");
+                for (i = 0; i < DomProducts.length; i++) {
+                    if (DomProducts[i].value != "") {
+                        ODitem.push(DomProducts[i].value);
+                        ODprice.push(DomPrice[i].value);
+                        ODquantity.push(DomQuantuty[i].value);
+                    }
+                }
 
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Action("UpdateOrder_Save")',
+                    data: {
+                        OrderID:$('#OrderId').val(),
+                        CustomerID: $('#CustName option:selected').val(),
+                        EmployeeID: $('#EmpName option:selected').val(),
+                        OrderDate: $('#OrderDate').val(),
+                        RequiredDate: $('#RequireDate').val(),
+                        ShippedDate: $('#ShipDate').val(),
+                        ShipperID: $('#ShipCompany option:selected').val(),
+                        Freight: $('#Freight').val(),
+                        ShipCountry: $('#ShipCountry').val(),
+                        ShipCity: $('#ShipCity').val(),
+                        ShipRegion: $('#ShipRegion').val(),
+                        ShipPostalCode: $('#ShipPostalCode').val(),
+                        ShipAddress: $('#ShipAddress').val(),
+                        ShipName: $('#ShipName').val(),
+                        ODitem: ODitem,
+                        ODprice: ODprice,
+                        ODquantity: ODquantity
+
+                    }, success: function () {
+                        alert("修改成功。");
+
+                    }, error: function () { alert("Error"); }
+                });
+            }
 
 
 
