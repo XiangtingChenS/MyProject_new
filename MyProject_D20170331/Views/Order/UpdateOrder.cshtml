@@ -24,7 +24,8 @@
                 <tr>
                     <td>訂單編號</td>
                     <td colspan="3">
-                        @Html.TextBox("OrderId")
+                        <spna id="OrderId"/>
+                        @*@Html.TextBox("OrderId",null,new { disabled = "true" })*@
                     </td>
                 </tr>
                 <tr>
@@ -137,6 +138,7 @@
                 data: {
                     OrderID: '@ViewBag.UpdateOrderId'
                 }, success: function (result) {
+                    document.getElementById("OrderId").innerHTML = result.OrderID;
 
                     document.getElementById("CustName").value = result.CustomerID;
                     document.getElementById("EmpName").value = result.EmployeeID;
@@ -370,7 +372,7 @@
                     type: 'post',
                     url: '@Url.Action("UpdateOrder_Save")',
                     data: {
-                        OrderID:$('#OrderId').val(),
+                        OrderID: $('#OrderId').text(),
                         CustomerID: $('#CustName option:selected').val(),
                         EmployeeID: $('#EmpName option:selected').val(),
                         OrderDate: $('#OrderDate').val(),
