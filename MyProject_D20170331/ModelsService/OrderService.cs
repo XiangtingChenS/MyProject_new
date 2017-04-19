@@ -22,7 +22,7 @@ namespace MyProject_D20170331.Models
 
             foreach (var item in name)
             {
-                result.Add(item.CustomerID+","+item.CompanyName);
+                result.Add(item.CustomerID + "," + item.CompanyName);
             }
             return result;
         }
@@ -40,10 +40,10 @@ namespace MyProject_D20170331.Models
 
             foreach (var item in name)
             {
-                result.Add(item.EmployeeID+","+item.LastName + "-" + item.FirstName);
+                result.Add(item.EmployeeID + "," + item.LastName + "-" + item.FirstName);
             }
             return result;
-        } 
+        }
 
         public List<string> GetShipCompany()
         {
@@ -58,7 +58,7 @@ namespace MyProject_D20170331.Models
 
             foreach (var item in company)
             {
-                result.Add(item.ShipperID+","+item.CompanyName);
+                result.Add(item.ShipperID + "," + item.CompanyName);
             }
 
             return result;
@@ -78,7 +78,7 @@ namespace MyProject_D20170331.Models
 
             foreach (var item in product)
             {
-                result.Add(item.ProductID+","+item.ProductName);
+                result.Add(item.ProductID + "," + item.ProductName);
             }
 
             return result;
@@ -116,7 +116,7 @@ namespace MyProject_D20170331.Models
                         x.ShippedDate
                     })
                     .Where(x =>
-                            (OrderID == 0 || x.OrderID == OrderID ) &&
+                            (OrderID == 0 || x.OrderID == OrderID) &&
                             (CompanyName == null || x.CompName.Contains(CompanyName)) &&
                             (EmployeeName == "" || x.EmployeeName == EmployeeName) &&
                             (ShipCompanyName == "" || x.ShipCompanyName == ShipCompanyName) &&
@@ -134,7 +134,7 @@ namespace MyProject_D20170331.Models
                     OrderID = item.OrderID,
                     CustomerName = item.CompName,
                     OrderDate = item.OrderDate.ToString(),
-                   ShippedDate =item.ShippedDate.ToString()
+                    ShippedDate = item.ShippedDate.ToString()
                 };
                 result.Add(orderModel);
             }
@@ -173,7 +173,7 @@ namespace MyProject_D20170331.Models
             db.Orders.Add(order);
 
 
-            if (MyOM.ODitem != null && MyOM.ODprice !=null && MyOM.ODquantity!=null)
+            if (MyOM.ODitem != null && MyOM.ODprice != null && MyOM.ODquantity != null)
             {
                 for (int i = 0; i < MyOM.ODitem.Length; i++)
                 {
@@ -266,9 +266,9 @@ namespace MyProject_D20170331.Models
                 }
                 return om;
             }
-           
+
             return null;
-            
+
         }
 
 
@@ -303,17 +303,25 @@ namespace MyProject_D20170331.Models
             //因ProductID無法被修改，故把原本明細全砍掉，再++
             var OD = db.OrderDetails
                    .Where(x => x.OrderID == om.OrderID)
-                   .ToArray();
+                   .ToList();
+            db.OrderDetails.RemoveRange(OD);
 
-            for (int i = 0; i < OD.Length; i++)
+            if (om.ODitem != null)
             {
-                OD[i].ProductID = om.ODitem[i];
-                OD[i].UnitPrice = om.ODprice[i];
-                OD[i].Qty = om.ODquantity[i];
+                for (int i = 0; i < om.ODitem.Length; i++)
+                {
+                    OrderDetails od = new OrderDetails()
+                    {
+                        OrderID = om.OrderID,
+                        ProductID = om.ODitem[i],
+                        UnitPrice = om.ODprice[i],
+                        Qty = om.ODquantity[i]
+                    };
+                    db.OrderDetails.Add(od);
+                }
             }
 
-
-           db.SaveChanges();
+            db.SaveChanges();
 
 
         }

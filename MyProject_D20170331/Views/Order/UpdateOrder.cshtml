@@ -160,8 +160,10 @@
                         document.getElementById("addOrderDetail").onclick();
 
                         document.getElementsByClassName("DomProductSelect")[k].value = result.ODitem[k];
+                        document.getElementsByClassName("DomProductPrice")[k].value = result.ODprice[k];
                         document.getElementsByClassName("DomProductQuantity")[k].value = result.ODquantity[k];
-                        document.getElementsByClassName("DomProductSelect")[k].onchange();
+                        ChangeTotal(document.getElementsByClassName("DomProductSelect")[k]);
+                      //  document.getElementsByClassName("DomProductSelect")[k].onchange();
                     }
 
                 }, error: function () {
