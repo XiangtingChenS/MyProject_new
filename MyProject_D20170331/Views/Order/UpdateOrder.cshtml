@@ -24,7 +24,7 @@
                 <tr>
                     <td>訂單編號</td>
                     <td colspan="3">
-                        <spna id="OrderId"/>
+                        <spna id="OrderId" />
                         @*@Html.TextBox("OrderId",null,new { disabled = "true" })*@
                     </td>
                 </tr>
@@ -103,7 +103,7 @@
                 </tr>
                 <tr>
                     <td>訂單金額總計</td>
-                    <td colspan="3"  align="right"><span id="allTotal">$ 0</span></td>
+                    <td colspan="3" align="right"><span id="allTotal">$ 0</span></td>
                 </tr>
 
                 <tr>
@@ -133,63 +133,65 @@
         </div>
 
         <script>
-            $.ajax({
-                type: 'post',
-                url: '@Url.Action("UpdateOrder_Data")',
-                data: {
-                    OrderID: '@ViewBag.UpdateOrderId'
-                }, success: function (result) {
-                    document.getElementById("OrderId").innerHTML = result.OrderID;
-
-                    document.getElementById("CustName").value = result.CustomerID;
-                    document.getElementById("EmpName").value = result.EmployeeID;
-
-                    document.getElementById("OrderDate").value = replaceDate(result.OrderDate);
-                    document.getElementById("RequireDate").value = replaceDate(result.RequiredDate);
-                    document.getElementById("ShipDate").value = replaceDate(result.ShippedDate);
-
-                    document.getElementById("ShipCompany").value = result.ShipperID;
-                    document.getElementById("Freight").value = result.Freight;
-
-                    document.getElementById("ShipCountry").value = result.ShipCountry;
-                    document.getElementById("ShipCity").value = result.ShipCity;
-                    document.getElementById("ShipRegion").value = result.ShipRegion;
-                    document.getElementById("ShipPostalCode").value = result.ShipPostalCode;
-                    document.getElementById("ShipAddress").value = result.ShipAddress;
-                    document.getElementById("ShipName").value = result.ShipName;
-
-                    console.log(result);
-                    for (k = 0; k < result.ODitem.length; k++) {
-                        document.getElementById("addOrderDetail").onclick();
-
-                        document.getElementsByClassName("DomProductSelect")[k].value = result.ODitem[k];
-                        document.getElementsByClassName("DomProductPrice")[k].value = result.ODprice[k];
-                        document.getElementsByClassName("DomProductQuantity")[k].value = result.ODquantity[k];
-                        ChangeTotal(document.getElementsByClassName("DomProductSelect")[k]);
-                      //  document.getElementsByClassName("DomProductSelect")[k].onchange();
-                    }
-
-                }, error: function () {
-                    alert("error");
-                    document.getElementById("SaveData").disabled = true;
-                    document.getElementById("DeleteOrder").disabled = true;
-                }
+            var getProductArray = [];
+            // $(document).ready(function () {
+            $.get('@Url.Action("getProduct")', function (result) {
+                $.each(result, function (i, field) {
+                    getProductArray.push(field);
+                });
             });
+            // });
+            $(document).ready(function () {
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Action("UpdateOrder_Data")',
+                    data: {
+                        OrderID: '@ViewBag.UpdateOrderId'
+                    }, success: function (result) {
+                        document.getElementById("OrderId").innerHTML = result.OrderID;
 
+                        document.getElementById("CustName").value = result.CustomerID;
+                        document.getElementById("EmpName").value = result.EmployeeID;
+
+                        document.getElementById("OrderDate").value = replaceDate(result.OrderDate);
+                        document.getElementById("RequireDate").value = replaceDate(result.RequiredDate);
+                        document.getElementById("ShipDate").value = replaceDate(result.ShippedDate);
+
+                        document.getElementById("ShipCompany").value = result.ShipperID;
+                        document.getElementById("Freight").value = result.Freight;
+
+                        document.getElementById("ShipCountry").value = result.ShipCountry;
+                        document.getElementById("ShipCity").value = result.ShipCity;
+                        document.getElementById("ShipRegion").value = result.ShipRegion;
+                        document.getElementById("ShipPostalCode").value = result.ShipPostalCode;
+                        document.getElementById("ShipAddress").value = result.ShipAddress;
+                        document.getElementById("ShipName").value = result.ShipName;
+
+                        console.log(result);
+                        for (k = 0; k < result.ODitem.length; k++) {
+                            document.getElementById("addOrderDetail").onclick();
+
+                            document.getElementsByClassName("DomProductSelect")[k].value = result.ODitem[k];
+                            document.getElementsByClassName("DomProductPrice")[k].value = result.ODprice[k];
+                            document.getElementsByClassName("DomProductQuantity")[k].value = result.ODquantity[k];
+                            ChangeTotal(document.getElementsByClassName("DomProductSelect")[k]);
+                            //  document.getElementsByClassName("DomProductSelect")[k].onchange();
+                        }
+
+                    }, error: function () {
+                        alert("error");
+                        document.getElementById("SaveData").disabled = true;
+                        document.getElementById("DeleteOrder").disabled = true;
+                    }
+                });
+            });
 
 
             document.getElementById("beforePage").onclick = function () {
                 location.href = "/Order/QueryOrder";
             };
 
-            var getProductArray = [];
-            $(document).ready(function () {
-                $.get('@Url.Action("getProduct")', function (result) {
-                    $.each(result, function (i, field) {
-                        getProductArray.push(field);
-                    });
-                });
-            });
+
 
 
             document.getElementById("addOrderDetail").onclick = function () {
@@ -215,6 +217,7 @@
                             data: {
                                 index: value
                             }, success: function (result) {
+
                                 document.getElementsByClassName("DomProductPrice")[rowIndex - 1].value = result;
                                 ChangeTotal(thisObject);
                             }, error: function () {
@@ -308,16 +311,14 @@
                 var domTotal = document.getElementsByClassName("DomTotal");
                 var sum = 0;
                 for (i = 0; i < domTotal.length; i++) {
-                     sum += parseFloat(replaceAll(domTotal[i].innerHTML));
+                    sum += parseFloat(replaceAll(domTotal[i].innerHTML));
                 }
                 document.getElementById("allTotal").innerHTML = "$ " + formatNumber(sum);
             }
 
-            function replaceAll(n)
-            {
-                while (n.indexOf(",") != -1)
-                {
-                   n= n.replace(",", "");
+            function replaceAll(n) {
+                while (n.indexOf(",") != -1) {
+                    n = n.replace(",", "");
                 }
                 return n;
             }
@@ -345,14 +346,13 @@
 
             document.getElementById("DeleteOrder").onclick = function () {
 
-                var dialog=confirm("確定要刪除該筆訂單嗎?");
-                if (dialog == true)
-                {
+                var dialog = confirm("確定要刪除該筆訂單嗎?");
+                if (dialog == true) {
                     $.ajax({
                         type: 'post',
                         url: '@Url.Action("QueryOrder_Delete")',
                         data: {
-                            OrderID: document.getElementById("OrderId").value
+                            OrderID: document.getElementById("OrderId").innerHTML
                         }, success: function () {
                             alert("刪除成功! 導回前一頁。");
                             location.href = "/Order/QueryOrder";
