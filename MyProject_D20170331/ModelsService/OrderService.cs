@@ -129,12 +129,14 @@ namespace MyProject_D20170331.Models
 
             foreach (var item in tmp)
             {
+                string shipdate=null;
+                if (item.ShippedDate!=null) { shipdate = Convert.ToDateTime(item.ShippedDate).ToShortDateString();  }
                 OrderModel orderModel = new OrderModel()
                 {
                     OrderID = item.OrderID,
                     CustomerName = item.CompName,
-                    OrderDate = item.OrderDate.ToString(),
-                    ShippedDate = item.ShippedDate.ToString()
+                    OrderDate = item.OrderDate.ToShortDateString(),
+                    ShippedDate = shipdate
                 };
                 result.Add(orderModel);
             }

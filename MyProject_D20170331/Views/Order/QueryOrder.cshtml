@@ -146,20 +146,23 @@
         function deleteOrder(thisObject) {
             var index = thisObject.parentNode.parentNode.rowIndex;
             var orderId = document.getElementsByClassName("orderId_class")[index - 1].innerHTML;
-
-            $.ajax({
-                type: 'post',
-                url: '@Url.Action("QueryOrder_Delete")',
-                data: {
-                    OrderID: orderId
-                },
-                success: function () {
-                    document.getElementById("tab").deleteRow(index);
-                },
-                error: function () {
-                    alert("Delete Error");
-                }
-            });
+            var dialog = confirm("確定要刪除該筆訂單嗎?");
+            if (dialog == true) {
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Action("QueryOrder_Delete")',
+                    data: {
+                        OrderID: orderId
+                    },
+                    success: function () {
+                        document.getElementById("tab").deleteRow(index);
+                        alert("刪除成功。");
+                    },
+                    error: function () {
+                        alert("Delete Error");
+                    }
+                });
+            }
         }
 
         function updateOrder(thisObject) {

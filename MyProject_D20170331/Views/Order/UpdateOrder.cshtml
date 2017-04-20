@@ -294,7 +294,7 @@
                 if (quantity.value == "") quantity.value = 0;
 
                 var Total = document.getElementsByClassName("DomTotal")[index];
-                Total.innerHTML = price.value * quantity.value;
+                Total.innerHTML = formatNumber(price.value * quantity.value);
 
                 doAllTotal();
             }
@@ -303,11 +303,26 @@
                 var domTotal = document.getElementsByClassName("DomTotal");
                 var sum = 0;
                 for (i = 0; i < domTotal.length; i++) {
-                    sum += parseFloat(domTotal[i].innerHTML);
+                     sum += parseFloat(replaceAll(domTotal[i].innerHTML));
                 }
-                document.getElementById("allTotal").innerHTML = "$ " + sum;
+                document.getElementById("allTotal").innerHTML = "$ " + formatNumber(sum);
             }
 
+            function replaceAll(n)
+            {
+                while (n.indexOf(",") != -1)
+                {
+                   n= n.replace(",", "");
+                }
+                return n;
+            }
+
+            function formatNumber(n) {
+                n += "";
+                var arr = n.split(".");
+                var re = /(\d{1,3})(?=(\d{3})+$)/g;
+                return arr[0].replace(re, "$1,") + (arr.length == 2 ? "." + arr[1] : "");
+            }
 
             function replaceDate(date) {
                 if (date != null) {
@@ -361,7 +376,7 @@
                 var DomPrice = document.getElementsByClassName("DomProductPrice");
                 var DomQuantuty = document.getElementsByClassName("DomProductQuantity");
                 for (i = 0; i < DomProducts.length; i++) {
-                    if (DomProducts[i].value != "") {
+                    if (DomProducts[i].value != 0) {
                         ODitem.push(DomProducts[i].value);
                         ODprice.push(DomPrice[i].value);
                         ODquantity.push(DomQuantuty[i].value);
