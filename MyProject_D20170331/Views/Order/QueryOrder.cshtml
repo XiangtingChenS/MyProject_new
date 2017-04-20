@@ -14,13 +14,15 @@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery-1.9.1.min.js"></script>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-tablepage-1.0.js"></script>
 </head>
 <body>
     <div>
 
         <div class="container">
             <h3>訂單查詢</h3>
-            <table class="table table-bordered">
+            <table  class="table table-bordered">
                 <tr>
                     <td>訂單編號</td>
                     <td colspan="3">
@@ -94,6 +96,10 @@
                     </tr>
                 </tbody>
             </table>
+            <div align="center">
+                <span id='table_page'></span>
+            <div>
+          
         </div>
 
     </div>
@@ -123,11 +129,19 @@
                         $.each(result, function (index, field) {
                             $("#tab-tbody").append("<tr><td class='orderId_class'>" + field.OrderID + "</td><td>" + field.CustomerName + "</td><td>" + field.OrderDate + "</td><td>" + field.ShippedDate + "</td><td><button onclick='updateOrder(this)'>修改</button></td><td><button onclick='deleteOrder(this)'>刪除</button></td></tr>");
                         });
+
+                        $("#tab").tablepage($("#table_page"), 10);
                     },
                     error: function () { alert("Error"); }
                 });
             });
         });
+
+        //setTimeout(function () {
+          
+        //},10000);
+       
+
 
         document.getElementById("MyClean").onclick = function () {
             document.getElementById("OrderId").value = "";

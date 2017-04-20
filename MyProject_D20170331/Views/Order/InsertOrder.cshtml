@@ -57,8 +57,9 @@
                 </tr>
                 <tr>
                     <td>運費</td>
-                    <td colspan="3">
-                        @Html.TextBox("Freight")
+                    <td colspan="3" >
+                        <input id="Freight" type="text" style="text-align: right"/>
+                        @*@Html.TextBox("Freight")*@
                     </td>
                 </tr>
                 <tr>
@@ -93,7 +94,7 @@
                 </tr>
                 <tr>
                     <td>訂單金額總計</td>
-                    <td colspan="3"><span id="allTotal">$ 0</span></td>
+                    <td colspan="3" align="right"><span id="allTotal">$ 0</span></td>
                 </tr>
 
                 <tr>
@@ -235,6 +236,7 @@
             var TextBox_price = document.createElement("input");
             TextBox_price.type = "text";
             TextBox_price.value = 0;
+            TextBox_price.style.textAlign = "right";
             TextBox_price.setAttribute("class", "DomProductPrice");
             TextBox_price.addEventListener("change", function () {
                 ChangeTotal(this);
@@ -244,6 +246,7 @@
             var TextBox_quantity = document.createElement("input");
             TextBox_quantity.type = "text";
             TextBox_quantity.value = 0;
+            TextBox_quantity.style.textAlign = "right";
             TextBox_quantity.setAttribute("class", "DomProductQuantity");
             TextBox_quantity.addEventListener("change", function () {
                 ChangeTotal(this);
@@ -254,6 +257,8 @@
             var span_total = document.createElement("span");
             span_total.setAttribute("class", "DomTotal");
             span_total.appendChild(document.createTextNode("0"));
+
+            Td_total.align = "right";
             Td_total.appendChild(span_total);
 
             var Btn_cancel = document.createElement("button");
