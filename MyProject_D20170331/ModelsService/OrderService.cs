@@ -116,7 +116,8 @@ namespace MyProject_D20170331.Models
                         x.ShippedDate
                     })
                     .Where(x =>
-                            (OrderID == 0 || x.OrderID == OrderID) &&
+                            (OrderID == 0 || x.OrderID.ToString().Contains(OrderID.ToString())) &&
+                            //(OrderID == 0 || x.OrderID == OrderID) &&
                             (CompanyName == null || x.CompName.Contains(CompanyName)) &&
                             (EmployeeName == "" || x.EmployeeName == EmployeeName) &&
                             (ShipCompanyName == "" || x.ShipCompanyName == ShipCompanyName) &&

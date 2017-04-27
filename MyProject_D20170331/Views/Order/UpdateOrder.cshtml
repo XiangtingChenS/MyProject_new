@@ -31,36 +31,36 @@
                 <tr>
                     <td><span style="color:red">*</span>客戶名稱</td>
                     <td colspan="3">
-                        @Html.DropDownList("CustName", (List<SelectListItem>)ViewBag.CustName)
+                        @Html.DropDownList("CustName", (List<SelectListItem>)ViewBag.CustName, new { @class = "required" })
                     </td>
                 </tr>
                 <tr>
                     <td><span style="color:red">*</span>負責員工名稱</td>
                     <td colspan="3">
-                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)
+                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName, new { @class = "required" })
                     </td>
                 </tr>
                 <tr>
                     <td><span style="color:red">*</span>訂單日期</td>
                     <td>
-                        <input id="OrderDate" type="date">
+                        <input id="OrderDate" type="date"  class="required">
                     </td>
                     <td><span style="color:red">*</span>需要日期</td>
                     <td>
-                        <input id="RequireDate" type="date">
+                        <input id="RequireDate" type="date"  class="required">
                     </td>
                 </tr>
                 <tr>
                     <td>出貨日期</td>
                     <td colspan="3">
-                        <input id="ShipDate" type="date">
+                        <input id="ShipDate" type="date" >
                         @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
                     </td>
                 </tr>
                 <tr>
-                    <td>出貨公司名稱</td>
+                    <td><span style="color:red">*</span>出貨公司名稱</td>
                     <td colspan="3">
-                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany)
+                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany,new { @class="required"})
                         @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
                     </td>
                 </tr>
@@ -72,13 +72,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>出貨國家</td>
+                    <td><span style="color:red">*</span>出貨國家</td>
                     <td>
-                        @Html.TextBox("ShipCountry")
+                        @Html.TextBox("ShipCountry",null,new { @class="required"})
                     </td>
-                    <td>出貨城市</td>
+                    <td><span style="color:red">*</span>出貨城市</td>
                     <td>
-                        @Html.TextBox("ShipCity")
+                        @Html.TextBox("ShipCity",null,new { @class="required"})
                     </td>
                 </tr>
                 <tr>
@@ -92,13 +92,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>出貨地址</td>
+                    <td><span style="color:red">*</span>出貨地址</td>
                     <td>
-                        @Html.TextBox("ShipAddress")
+                        @Html.TextBox("ShipAddress",null,new { @class="required"})
                     </td>
-                    <td>出貨說明</td>
+                    <td><span style="color:red">*</span>出貨說明</td>
                     <td>
-                        @Html.TextBox("ShipName")
+                        @Html.TextBox("ShipName",null,new { @class="required"})
                     </td>
                 </tr>
                 <tr>
@@ -365,12 +365,17 @@
             };
 
             document.getElementById("SaveData").onclick = function () {
-                if (document.getElementById("CustName").value == 0 || document.getElementById("EmpName").value == 0 || document.getElementById("OrderDate").value == "" || document.getElementById("RequireDate").value == "") {
-                    alert("請輸入必填欄位");
+                var class_required = document.getElementsByClassName("required");
+
+                var boo = false;
+                for (i = 0; i < class_required.length; i++) {
+                    if (class_required[i].value == "" || class_required[i].value == 0) {
+                        boo = true;
+                        break;
+                    }
                 }
-                else {
-                    saveData();
-                }
+
+                boo ? alert("請輸入必填欄位") : saveData();
             };
 
 
