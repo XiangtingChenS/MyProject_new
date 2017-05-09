@@ -25,9 +25,46 @@
     <script src="~/kendo/js/kendo.all.min.js"></script>
 
 
+    <style>
+        .demo-section p {
+            margin: 3px 0 20px;
+            line-height: 50px;
+        }
+
+        .demo-section .k-button {
+            width: 250px;
+        }
+
+        .k-notification {
+            border: 0;
+        }
+
+
+
+        /* Error template */
+        .k-notification-error.k-group {
+            background: rgba(100%,0%,0%,.7);
+            color: #ffffff;
+        }
+
+        .wrong-pass {
+            width: 200px;
+            height: 60px;
+        }
+
+        .wrong-pass h3 {   
+            font-size: 1.5em;
+            padding: 10px 20px 0px 20px;
+        }
+
+
+    </style>
+
+
+
 </head>
 <body>
-    @*//123*@
+
 <div>
     @*<header style="background-color:black; height:50px;"></header>*@
     <div class="container">
@@ -97,83 +134,58 @@
 
         @*<h3>查詢結果</h3>*@
         <div id="example">
-            <div id="grid">
-                @*<table id="tab" class="table table-bordered">
-                        <tbody id="tab-tbody">
-                            <tr>
-                                <td>訂單編號</td>
-                                <td>客戶名稱</td>
-                                <td>訂購日期</td>
-                                <td>發貨日期</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>*@
-            </div>
-        </div>
-        <div align="center">
-            <span id='table_page'></span>
-            <div>
-
-            </div>
+            <span id="notification" style="display:none;"></span>
+            <div id="grid"></div>
         </div>
     </div>
 
 </div>
 
 
-<div id="window"></div>
+    <div id="window"></div>
 
-<script type="text/x-kendo-template" id="windowTemplate">
-    確定要刪除
-    <strong>#= OrderID #</strong> ?
-    <br>
-    <button class="k-button" id="yesButton">Yes</button>
-    <button class="k-button" id="noButton"> No</button>
-</script>
+
+        <script type="text/x-kendo-template" id="windowTemplate" >
+            <div style="text-align:center; ">
+                確定要刪除訂單編號 <strong>#= OrderID #</strong> 嗎? <br><br>
+                <button class="k-button" id="yesButton">Yes</button>
+                <button class="k-button" id="noButton"> No</button>
+            </div>
+        </script>
+
+        <script id="errorTemplate" type="text/x-kendo-template">
+            <div class="wrong-pass">
+                <h3>#= title #</h3>
+            </div>
+        </script>
 
 <script>
-        var windowTemplate = kendo.template($("#windowTemplate").html());
-        $(document).ready(function () {
-            $("#MyQuery").click(function () {
-                $.ajax({
-                    type: 'post',
-                    url: '@Url.Action("QueryOrder")',
-                    data: {
-                        OrderID: $('#OrderId').val(),
-                        CustomerName: $('#CustName').val(),
-                        //  EmployeeName: $('#EmpName option:selected').text(),
-                        EmployeeName:$('#EmpName').data("kendoComboBox").text(),
-                        //  ShipCompanyName: $('#ShipCompany option:selected').text(),
-                        ShipCompanyName:$('#ShipCompany').data("kendoComboBox").text(),
-                        OrderDate: $('#orderDate').val()=="年 / 月 / 日"?"": $('#orderDate').val(),
-                        RequireDate: $('#requireDate').val()=="年 / 月 / 日"?"": $('#requireDate').val(),
-                        ShipDate: $('#shipDate').val()=="年 / 月 / 日"?"":$('#shipDate').val()
+    var windowTemplate = kendo.template($("#windowTemplate").html());
+    $(document).ready(function () {
+        $("#MyQuery").click(function () {
+            $.ajax({
+                type: 'post',
+                url: '@Url.Action("QueryOrder")',
+                data: {
+                    OrderID: $('#OrderId').val(),
+                    CustomerName: $('#CustName').val(),
+                    EmployeeName:$('#EmpName').data("kendoComboBox").text(),
+                    ShipCompanyName:$('#ShipCompany').data("kendoComboBox").text(),
+                    OrderDate: $('#orderDate').val()=="年 / 月 / 日"?"": $('#orderDate').val(),
+                    RequireDate: $('#requireDate').val()=="年 / 月 / 日"?"": $('#requireDate').val(),
+                    ShipDate: $('#shipDate').val()=="年 / 月 / 日"?"":$('#shipDate').val()
 
-                    },
-                    success: function (result) {
-                        //var tag = document.getElementById("tab-tbody");
-                        //var tabRow = tag.rows.length;
-                        //for (i = tabRow - 1; i > 0; i--) {
-                        //    tag.deleteRow(i);
-                        //}
-                        //$.each(result, function (index, field) {
-                        //    $("#tab-tbody").append("<tr><td class='orderId_class'>" + field.OrderID + "</td><td>" + field.CustomerName + "</td><td>" + field.OrderDate + "</td><td>" + field.ShippedDate + "</td><td><button onclick='updateOrder(this)'>修改</button></td><td><button onclick='deleteOrder(this)'>刪除</button></td></tr>");
-                        //});
-
-                        //$("#tab").tablepage($("#table_page"), 10);
-
-                        var data = [];
-                        $.each(result, function (index, field) {
-                            data.push({ OrderID: field.OrderID, CustomerName: field.CustomerName, OrderDate: field.OrderDate, ShippedDate: field.ShippedDate });
-                        });
-
-                        GenerateGrid(data);
-                    },
-                    error: function () { alert("Error"); }
-                });
+                },
+                success: function (result) {
+                    var data = [];
+                    $.each(result, function (index, field) {
+                        data.push({ OrderID: field.OrderID, CustomerName: field.CustomerName, OrderDate: field.OrderDate, ShippedDate: field.ShippedDate });
+                    });
+                    GenerateGrid(data);
+                },
+                error: function () { alert("Error"); }
             });
+        });
 
 
             //ComboBox-EmpName
@@ -267,14 +279,24 @@
             document.getElementById("CustName").value = "";
             document.getElementById("EmpName").selectedIndex = 0;
             document.getElementById("ShipCompany").selectedIndex = 0;
-            document.getElementById("orderDate").value = "";
-            document.getElementById("requireDate").value = "";
-            document.getElementById("shipDate").value = "";
+            document.getElementById("orderDate").value = "年 / 月 / 日";
+            document.getElementById("requireDate").value = "年 / 月 / 日";
+            document.getElementById("shipDate").value = "年 / 月 / 日";
         }
 
         document.getElementById("MyInsertOrder").onclick = function () {
             location.href = "/Order/InsertOrder";
         }
+
+        var notification = $("#notification").kendoNotification({
+            stacking: "top",
+            templates: [ {
+                type: "error",
+                template: $("#errorTemplate").html()
+            }]
+        }).data("kendoNotification");
+    
+        $(document).one("kendo:pageUnload", function(){ if (notification) { notification.hide(); } });
 
         function deleteOrder(orderId) {
                 $.ajax({
@@ -284,7 +306,10 @@
                         OrderID: orderId
                     },
                     success: function () {
-                        alert("刪除成功。");
+                        notification.show({
+                            title: "Delete Success"
+                        }, "error");
+
                     },
                     error: function () {
                         alert("Delete Error");
@@ -299,7 +324,7 @@
             window.location.href = "@Url.Action("UpdateOrder",new { OrderID="_ID"})".replace("_ID", id);
         }
 
-        //--11
+    
         function GenerateGrid(data)
         {
             // custom logic start
@@ -373,10 +398,11 @@
                 });
 
                 var window = $("#window").kendoWindow({
-                    title: "Are you sure you want to delete this record?",
-                    visible: false, //the window will not appear before its .open method is called
-                    width: "400px",
-                    height: "200px",
+                    modal: true,
+                    title: "訊息",
+                    visible: false, 
+                    width: "300px",
+                    height: "80px",
                 }).data("kendoWindow");
 
 
