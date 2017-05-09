@@ -98,7 +98,7 @@ namespace MyProject_D20170331.Models
             return Convert.ToDouble(price[0].UnitPrice);
         }
 
-        //這裡要再改
+        
         public List<OrderModel> GetQueryResult(int OrderID, string CompanyName, string EmployeeName, string ShipCompanyName, DateTime OrderDate, DateTime RequireDate, DateTime ShipDate)
         {
             List<OrderModel> result = new List<OrderModel>();

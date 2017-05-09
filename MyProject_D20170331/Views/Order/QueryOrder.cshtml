@@ -8,6 +8,7 @@
 
 <html>
 <head>
+
     <meta name="viewport" content="width=device-width" />
     <title>QueryOrder</title>
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
@@ -16,95 +17,124 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 
     <script src="~/Scripts/jquery-tablepage-1.0.js"></script>
+
+    <!--kendo-->
+    <link href="~/kendo/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/kendo/styles/kendo.flat.min.css" rel="stylesheet" />
+
+    <script src="~/kendo/js/kendo.all.min.js"></script>
+
+
 </head>
 <body>
-    <div>
+    @*//123*@
+<div>
+    @*<header style="background-color:black; height:50px;"></header>*@
+    <div class="container">
 
-        <div class="container">
-            <h3>訂單查詢</h3>
-            <table  class="table table-bordered">
-                <tr>
-                    <td>訂單編號</td>
-                    <td colspan="3">
-                        @Html.TextBox("OrderId")
-                    </td>
-                </tr>
-                <tr>
-                    <td>客戶名稱</td>
-                    <td colspan="3">
-                        @Html.TextBox("CustName")
-                    </td>
-                </tr>
-                <tr>
-                    <td>負責員工</td>
-                    <td colspan="3">
-                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)
-                        @* @Html.DropDownListFor(model => model.EmployeeID, (List<SelectListItem>)ViewBag.EmpName)*@
-                    </td>
-                </tr>
-                <tr>
-                    <td>出貨公司</td>
-                    <td colspan="3">
-                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany)
-                        @*@Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)*@
-                    </td>
-                </tr>
-                <tr>
-                    <td>訂購日期</td>
-                    <td>
-                        <input type="date" id="orderDate">
-                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
-                    </td>
-                    <td>出貨日期</td>
-                    <td>
-                        <input type="date" id="shipDate">
-                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
-                    </td>
+        <div style="background-color:black;color:white;font-size:32px;margin-top:20px;border-radius:10px 10px 0px 0px;"><span style="padding:10px">訂單查詢</span></div>
+        <table class="table table-bordered">
+            <tr>
+                <td><b>訂單編號</b></td>
+                <td colspan="3">
+                    <input id="OrderId" style="border-color:#10c4b2" />
+                    @*@Html.TextBox("OrderId")*@
+                </td>
+            </tr>
+            <tr>
+                <td><b>客戶名稱</b></td>
+                <td colspan="3">
+                    <input id="CustName" style="border-color:#10c4b2" />
+                    @*@Html.TextBox("CustName")*@
+                </td>
+            </tr>
+            <tr>
+                <td><b>負責員工</b></td>
+                <td colspan="3">
+                    <input id="EmpName" placeholder="-Select-" />
+                    @*@Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)*@
+                </td>
+            </tr>
+            <tr>
+                <td><b>出貨公司</b></td>
+                <td colspan="3">
+                    <input id="ShipCompany" placeholder="-Select-" />
+                    @*@Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany)*@
+                </td>
+            </tr>
+            <tr>
+                <td><b>訂購日期</b></td>
+                <td>
+                    <input id="orderDate" value="年 / 月 / 日" />
+                    @*<input type="date" id="orderDate">*@
+                </td>
+                <td><b>出貨日期</b></td>
+                <td>
+                    <input id="shipDate" value="年 / 月 / 日" />
+                    @*<input type="date" id="shipDate">*@
 
-                </tr>
-                <tr>
-                    <td>需要日期</td>
-                    <td colspan="3">
-                        <input type="date" id="requireDate">
-                        @*@Html.TextBox(" ")
-                            @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)*@
-                    </td>
-                </tr>
+                </td>
 
-                <tr>
-                    <td></td>
-                    <td colspan="3">
-                        <input id="MyQuery" type="submit" value="查詢" />
-                        <input id="MyClean" type="button" value="清除" />
-                        @*@Html.ActionLink("新增訂單", "InsertOrder")*@
-                        <input id="MyInsertOrder" type="button" value="新增訂單" />
-                    </td>
+            </tr>
+            <tr>
+                <td><b>需要日期</b></td>
+                <td colspan="3">
+                    <input id="requireDate" value="年 / 月 / 日" />
+                    @*<input type="date" id="requireDate">*@
+                </td>
+            </tr>
 
-                </tr>
-            </table>
+            <tr>
+                <td></td>
+                <td colspan="3">
+                    <input id="MyQuery" type="submit" value="查詢" />
+                    <input id="MyClean" type="button" value="清除" />
+                    <input id="MyInsertOrder" type="button" value="新增訂單" />
+                </td>
 
-            <h3>查詢結果</h3>
-            <table id="tab" class="table table-bordered">
-                <tbody id="tab-tbody">
-                    <tr>
-                        <td>訂單編號</td>
-                        <td>客戶名稱</td>
-                        <td>訂購日期</td>
-                        <td>發貨日期</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div align="center">
-                <span id='table_page'></span>
-            <div>
-          
+            </tr>
+        </table>
+
+        @*<h3>查詢結果</h3>*@
+        <div id="example">
+            <div id="grid">
+                @*<table id="tab" class="table table-bordered">
+                        <tbody id="tab-tbody">
+                            <tr>
+                                <td>訂單編號</td>
+                                <td>客戶名稱</td>
+                                <td>訂購日期</td>
+                                <td>發貨日期</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>*@
+            </div>
         </div>
+        <div align="center">
+            <span id='table_page'></span>
+            <div>
 
+            </div>
+        </div>
     </div>
 
-    <script>
+</div>
+
+
+<div id="window"></div>
+
+<script type="text/x-kendo-template" id="windowTemplate">
+    確定要刪除
+    <strong>#= OrderID #</strong> ?
+    <br>
+    <button class="k-button" id="yesButton">Yes</button>
+    <button class="k-button" id="noButton"> No</button>
+</script>
+
+<script>
+        var windowTemplate = kendo.template($("#windowTemplate").html());
         $(document).ready(function () {
             $("#MyQuery").click(function () {
                 $.ajax({
@@ -113,34 +143,123 @@
                     data: {
                         OrderID: $('#OrderId').val(),
                         CustomerName: $('#CustName').val(),
-                        EmployeeName: $('#EmpName option:selected').text(),
-                        ShipCompanyName: $('#ShipCompany option:selected').text(),
-                        OrderDate: $('#orderDate').val(),
-                        RequireDate: $('#requireDate').val(),
-                        ShipDate: $('#shipDate').val()
+                        //  EmployeeName: $('#EmpName option:selected').text(),
+                        EmployeeName:$('#EmpName').data("kendoComboBox").text(),
+                        //  ShipCompanyName: $('#ShipCompany option:selected').text(),
+                        ShipCompanyName:$('#ShipCompany').data("kendoComboBox").text(),
+                        OrderDate: $('#orderDate').val()=="年 / 月 / 日"?"": $('#orderDate').val(),
+                        RequireDate: $('#requireDate').val()=="年 / 月 / 日"?"": $('#requireDate').val(),
+                        ShipDate: $('#shipDate').val()=="年 / 月 / 日"?"":$('#shipDate').val()
 
                     },
                     success: function (result) {
-                        var tag = document.getElementById("tab-tbody");
-                        var tabRow = tag.rows.length;
-                        for (i = tabRow - 1; i > 0; i--) {
-                            tag.deleteRow(i);
-                        }
+                        //var tag = document.getElementById("tab-tbody");
+                        //var tabRow = tag.rows.length;
+                        //for (i = tabRow - 1; i > 0; i--) {
+                        //    tag.deleteRow(i);
+                        //}
+                        //$.each(result, function (index, field) {
+                        //    $("#tab-tbody").append("<tr><td class='orderId_class'>" + field.OrderID + "</td><td>" + field.CustomerName + "</td><td>" + field.OrderDate + "</td><td>" + field.ShippedDate + "</td><td><button onclick='updateOrder(this)'>修改</button></td><td><button onclick='deleteOrder(this)'>刪除</button></td></tr>");
+                        //});
+
+                        //$("#tab").tablepage($("#table_page"), 10);
+
+                        var data = [];
                         $.each(result, function (index, field) {
-                            $("#tab-tbody").append("<tr><td class='orderId_class'>" + field.OrderID + "</td><td>" + field.CustomerName + "</td><td>" + field.OrderDate + "</td><td>" + field.ShippedDate + "</td><td><button onclick='updateOrder(this)'>修改</button></td><td><button onclick='deleteOrder(this)'>刪除</button></td></tr>");
+                            data.push({ OrderID: field.OrderID, CustomerName: field.CustomerName, OrderDate: field.OrderDate, ShippedDate: field.ShippedDate });
                         });
 
-                        $("#tab").tablepage($("#table_page"), 10);
+                        GenerateGrid(data);
                     },
                     error: function () { alert("Error"); }
                 });
             });
+
+
+            //ComboBox-EmpName
+            var empName=[];
+            var array = @Html.Raw(Json.Encode(@ViewBag.EmpName));
+            for(var i = 0; i < array.length; i++) {
+                empName.push({text:array[i].Text, value:array[i].Value});
+            }
+
+            $("#EmpName").kendoComboBox({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: empName,
+                filter: "contains",
+                suggest: true,
+                index: 0
+            });
+
+            //ComboBox-ShipCompany
+            var shipCompany=[];
+            var array = @Html.Raw(Json.Encode(@ViewBag.ShipCompany));
+            for(var i = 0; i < array.length; i++) {
+                shipCompany.push({text:array[i].Text, value:array[i].Value});
+            }
+
+            $("#ShipCompany").kendoComboBox({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: shipCompany,
+                filter: "contains",
+                suggest: true,
+                index: 0
+            });
+
+
+            //DataPicker
+            $("#orderDate").kendoDatePicker({
+                format: "yyyy/MM/dd",
+                animation: {
+                    close: {
+                        effects: "fadeOut zoom:out",
+                        duration: 300
+                    },
+                    open: {
+                        effects: "fadeIn zoom:in",
+                        duration: 300
+                    }
+                }
+            });
+
+            $("#shipDate").kendoDatePicker({
+                format: "yyyy/MM/dd",
+                animation: {
+                    close: {
+                        effects: "fadeOut zoom:out",
+                        duration: 300
+                    },
+                    open: {
+                        effects: "fadeIn zoom:in",
+                        duration: 300
+                    }
+                }
+            });
+
+            $("#requireDate").kendoDatePicker({
+                format: "yyyy/MM/dd",
+                animation: {
+                    close: {
+                        effects: "fadeOut zoom:out",
+                        duration: 300
+                    },
+                    open: {
+                        effects: "fadeIn zoom:in",
+                        duration: 300
+                    }
+                }
+            });
+
+
+            //button
+            $("#MyQuery").kendoButton();
+            $("#MyClean").kendoButton();
+            $("#MyInsertOrder").kendoButton();
+
         });
 
-        //setTimeout(function () {
-          
-        //},10000);
-       
 
 
         document.getElementById("MyClean").onclick = function () {
@@ -157,11 +276,7 @@
             location.href = "/Order/InsertOrder";
         }
 
-        function deleteOrder(thisObject) {
-            var index = thisObject.parentNode.parentNode.rowIndex;
-            var orderId = document.getElementsByClassName("orderId_class")[index - 1].innerHTML;
-            var dialog = confirm("確定要刪除該筆訂單嗎?");
-            if (dialog == true) {
+        function deleteOrder(orderId) {
                 $.ajax({
                     type: 'post',
                     url: '@Url.Action("QueryOrder_Delete")',
@@ -169,14 +284,12 @@
                         OrderID: orderId
                     },
                     success: function () {
-                        document.getElementById("tab").deleteRow(index);
                         alert("刪除成功。");
                     },
                     error: function () {
                         alert("Delete Error");
                     }
                 });
-            }
         }
 
         function updateOrder(thisObject) {
@@ -186,14 +299,132 @@
             window.location.href = "@Url.Action("UpdateOrder",new { OrderID="_ID"})".replace("_ID", id);
         }
 
-        //$(document).ready(function () {
-        //    $("#MyClean").click(function () {
-        //      //  $('#OrderId').val() = "";
-        //        alert("asd");
+        //--11
+        function GenerateGrid(data)
+        {
+            // custom logic start
+            var dataNextID = data.length + 1;
 
-        //    });
-        //});
+            function getIndexById(id) {
+                var idx,
+                    l = data.length;
 
-    </script>
+                for (var j = 0; j < l; j++) {
+                    if (data[j].ProductID == id) {
+                        return j;
+                    }
+                }
+                return null;
+            }
+            // custom logic end
+
+                var dataSource = new kendo.data.DataSource({
+                    transport: {
+                        read: function (e) {
+                            // on success
+                            e.success(data);
+                            // on failure
+                            //e.error("XHR response", "status code", "error message");
+                        },
+                        create: function (e) {
+                            // assign an ID to the new item
+                            e.data.ProductID = dataNextID++;
+                            // save data item to the original datasource
+                            data.push(e.data);
+                            // on success
+                            e.success(e.data);
+                            // on failure
+                            //e.error("XHR response", "status code", "error message");
+                        },
+                        update: function (e) {
+                            // locate item in original datasource and update it
+                            data[getIndexById(e.data.ProductID)] = e.data;
+                            // on success
+                            e.success();
+                            // on failure
+                            //e.error("XHR response", "status code", "error message");
+                        },
+                        destroy: function (e) {
+                            // locate item in original datasource and remove it
+                            data.splice(getIndexById(e.data.ProductID), 1);
+                            // on success
+                            e.success();
+                            // on failure
+                            //e.error("XHR response", "status code", "error message");
+                        }
+                    },
+                    error: function (e) {
+                        // handle data operation error
+                        alert("Status: " + e.status + "; Error message: " + e.errorThrown);
+                    },
+                    pageSize: 10,
+                    batch: false,
+                    schema: {
+                        model: {
+                            id: "ProductID",
+                            fields: {
+                                OrderID: { type:"int" },
+                                CustomerName: { validation: { required: true } },
+                                OrderDate: { type: "date" },
+                                ShippedDate: { type: "date" }
+                            }
+                        }
+                    }
+                });
+
+                var window = $("#window").kendoWindow({
+                    title: "Are you sure you want to delete this record?",
+                    visible: false, //the window will not appear before its .open method is called
+                    width: "400px",
+                    height: "200px",
+                }).data("kendoWindow");
+
+
+              var grid=$("#grid").kendoGrid({
+                    dataSource: dataSource,
+                    sortable: true,
+                    pageable: true,
+                    resizable: true,
+                    columns: [
+                        { field: "OrderID", title: "訂單編號" },
+                        { field: "CustomerName", title: "客戶名稱" },
+                        { field: "OrderDate", title: "訂購日期", format: "{0:yyyy/MM/dd}" },
+                        { field: "ShippedDate", title: "發貨日期", format: "{0:yyyy/MM/dd}" },
+                        { command: [{name:"edit"},
+                            {name:"Delete",
+                                click: function(e){
+                                    e.preventDefault();
+                                    var tr = $(e.target).closest("tr");
+                                    var trData = this.dataItem(tr);
+                                    window.content(windowTemplate(trData));
+                                    window.center().open();
+
+                                    $("#yesButton").click(function(){
+                                        grid.dataSource.remove(trData)
+                                        grid.dataSource.sync()
+
+                                        //delete Order
+                                        deleteOrder(trData.OrderID);
+
+                                        window.close();
+                                    })
+                                    $("#noButton").click(function(){
+                                        window.close();
+                                    })
+                                }
+                            }
+                        ]}],
+                    editable: "inline"
+                }).data("kendoGrid");
+
+
+            };
+</script>
+
+
+@*<footer style="text-align:center;">四資三甲1103137126 陳湘婷</footer>*@
+
+
+
 </body>
 </html>
