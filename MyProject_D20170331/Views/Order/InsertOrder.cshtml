@@ -13,118 +13,378 @@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/jquery-1.9.1.min.js"></script>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+    <!--kendo-->
+    <link href="~/kendo/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/kendo/styles/kendo.flat.min.css" rel="stylesheet" />
+
+    <script src="~/kendo/js/kendo.all.min.js"></script>
 </head>
+@*<body style="background-image: url('../../img/back.jpg'); background-size:cover;">*@
 <body>
-    <div>
-        <div class="container">
-            <h3>新增訂單</h3>
-            <table class="table table-bordered">
-                <tr>
-                    <td><span style="color:red">*</span>客戶名稱</td>
-                    <td colspan="3">
-                        @Html.DropDownList("CustName", (List<SelectListItem>)ViewBag.CustName,new { @class="required"})
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>負責員工名稱</td>
-                    <td colspan="3">
-                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName,new { @class= "required" })
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>訂單日期</td>
-                    <td>
-                        <input id="OrderDate" type="date" class="required">
-                    </td>
-                    <td><span style="color:red">*</span>需要日期</td>
-                    <td>
-                        <input id="RequireDate" type="date" class="required">
-                    </td>
-                </tr>
-                <tr>
-                    <td>出貨日期</td>
-                    <td colspan="3">
-                        <input id="ShipDate" type="date">
-                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>出貨公司名稱</td>
-                    <td colspan="3">
-                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany,new {@class= "required" })
-                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
-                    </td>
-                </tr>
-                <tr>
-                    <td>運費</td>
-                    <td colspan="3" >
-                        <input id="Freight" type="text" style="text-align: right"/>
-                        @*@Html.TextBox("Freight")*@
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>出貨國家</td>
-                    <td>
-                        @Html.TextBox("ShipCountry",null,new { @class="required"})
-                    </td>
-                    <td><span style="color:red">*</span>出貨城市</td>
-                    <td>
-                        @Html.TextBox("ShipCity", null, new { @class = "required" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>出貨地區</td>
-                    <td>
-                        @Html.TextBox("ShipRegion")
-                    </td>
-                    <td>郵遞區號</td>
-                    <td>
-                        @Html.TextBox("ShipPostalCode")
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>出貨地址</td>
-                    <td>
-                        @Html.TextBox("ShipAddress", null, new { @class = "required" })
-                    </td>
-                    <td><span style="color:red">*</span>出貨說明</td>
-                    <td>
-                        @Html.TextBox("ShipName", null, new { @class = "required" })
-                    </td>
-                </tr>
-                <tr>
-                    <td>訂單金額總計</td>
-                    <td colspan="3" align="right"><span id="allTotal">$ 0</span></td>
-                </tr>
 
-                <tr>
-                    <td></td>
-                    <td colspan="3">
-                        <input id="SaveData" type="button" value="存檔">
-                        <input id="beforePage" type="button" value="回前一頁" />
-                    </td>
-
-                </tr>
-            </table>
-
-            <h3>訂單明細</h3>
-            <input id="addOrderDetail" type="button" value="+新增商品" />
-            <table id="tab" class="table table-bordered">
-                <tbody id="tab-tbody">
-                    <tr>
-                        <td>商品</td>
-                        <td>單價</td>
-                        <td>數量</td>
-                        <td>小計</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="container">
+        @*<h3>新增訂單</h3>*@
+        <div style="background-color:black;color:white;font-size:32px;margin-top:20px;border-radius:10px 10px 0px 0px;">
+            <span style="padding:10px">新增訂單</span>
         </div>
+        <table class="table table-bordered">
+            <tr>
+                <td><span style="color:red">*</span><b>客戶名稱</b></td>
+                <td colspan="3">
+                    <input id="CustName" placeholder="-Select-" class="required" />
+                    @*@Html.DropDownList("CustName", (List<SelectListItem>)ViewBag.CustName,new { @class="required"})*@
+                </td>
+            </tr>
+            <tr>
+                <td><span style="color:red">*</span><b>負責員工名稱</b></td>
+                <td colspan="3">
+                    <input id="EmpName" placeholder="-Select-" class="required" />
+                    @*@Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName,new { @class= "required" })*@
+                </td>
+            </tr>
+            <tr>
+                <td><span style="color:red">*</span><b>訂單日期</b></td>
+                <td>
+                    <input id="OrderDate" value="年 / 月 / 日" class="required" />
+                    @*<input id="OrderDate" type="date" class="required">*@
+                </td>
+                <td><span style="color:red">*</span><b>需要日期</b></td>
+                <td>
+                    <input id="RequireDate" value="年 / 月 / 日" class="required" />
+                    @*<input id="RequireDate" type="date" class="required">*@
+                </td>
+            </tr>
+            <tr>
+                <td><b>出貨日期</b></td>
+                <td colspan="3">
+                    <input id="ShipDate" value="年 / 月 / 日" class="required" />
+                    @*<input id="ShipDate" type="date">*@
+                    @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
+                </td>
+            </tr>
+            <tr>
+                <td><span style="color:red">*</span><b>出貨公司名稱</b></td>
+                <td colspan="3">
+                    <input id="ShipCompany" placeholder="-Select-" class="required" />
+                    @*@Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany,new {@class= "required" })*@
+                    @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
+                </td>
+            </tr>
+            <tr>
+                <td><b>運費</b></td>
+                <td colspan="3">
+                    <input id="Freight" type="text" style="text-align: right" />
+                    @*@Html.TextBox("Freight")*@
+                </td>
+            </tr>
+            <tr>
+                <td><span style="color:red">*</span><b>出貨國家</b></td>
+                <td>
+                    @Html.TextBox("ShipCountry", null, new { @class = "required" })
+                </td>
+                <td><span style="color:red">*</span><b>出貨城市</b></td>
+                <td>
+                    @Html.TextBox("ShipCity", null, new { @class = "required" })
+                </td>
+            </tr>
+            <tr>
+                <td><b>出貨地區</b></td>
+                <td>
+                    @Html.TextBox("ShipRegion")
+                </td>
+                <td><b>郵遞區號</b></td>
+                <td>
+                    @Html.TextBox("ShipPostalCode")
+                </td>
+            </tr>
+            <tr>
+                <td><span style="color:red">*</span><b>出貨地址</b></td>
+                <td>
+                    @Html.TextBox("ShipAddress", null, new { @class = "required" })
+                </td>
+                <td><span style="color:red">*</span><b>出貨說明</b></td>
+                <td>
+                    @Html.TextBox("ShipName", null, new { @class = "required" })
+                </td>
+            </tr>
+            <tr>
+                <td><b>訂單金額總計</b></td>
+                <td colspan="3" align="right"><span id="allTotal">$ 0</span></td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td colspan="3">
+                    <input id="SaveData" type="button" value="存檔">
+                    <input id="beforePage" type="button" value="回前一頁" />
+                </td>
+
+            </tr>
+        </table>
+
+        <h3>訂單明細</h3>
+        <script src="http://demos.telerik.com/kendo-ui/content/shared/js/products.js"></script>
+        <div id="example">
+            <div id="grid"></div>
+        </div>
+
+        <br><br><br><br><br><br>
+
+        <input id="addOrderDetail" type="button" value="+新增商品" />
+        <table id="tab" class="table table-bordered">
+            <tbody id="tab-tbody">
+                <tr>
+                    <td>商品</td>
+                    <td>單價</td>
+                    <td>數量</td>
+                    <td>小計</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
 
     </div>
 
     <script>
+
+        var eee;
+        var model;
+        $(document).ready(function () {
+            var dataSource = new kendo.data.DataSource({
+                schema: {
+                    model: {
+                        id: "ProductID",
+                        fields: {
+                            Product: { defaultValue: { ProductID: "0", ProductName: "-Select-"} },
+                            UnitPrice: { type: "number"/*, validation: { required: true, min: 1}*/ },
+                            Quantity:{ type: "number"/*, validation: { required: true, min: 1}*/ },
+                            SubTotal:{ type: "number" /*editable: false*//*, validation: { required: true, min: 1}*/ },
+                        }
+                    }
+                }
+            });
+            //<span class='k-icon k-i-close' id='temp' style='float: right;' onclick='ChangeSubTotal()'></span>"
+            $("#grid").kendoGrid({
+                dataSource: dataSource,
+                //   pageable: true,
+                toolbar: ["create"],
+                columns: [
+                    { field:"Product",title:"商品",  editor: productDropDownEditor, template: "#=Product.ProductName#" },
+                    { field: "UnitPrice", title: "單價",editor: SubTotalChange_Editor},
+                     { field:"Quantity",title:"數量" ,editor: SubTotalChange_Editor},
+                    { field: "SubTotal", title:"小計", format: "{0:c}", width: "130px" },
+                    { command: "destroy", title: "", width: "150px" }],
+                editable: true,
+                edit: function(e) {
+                    eee=e;
+                    model = e.model; //reference to the model that is about the be edited
+          
+
+                    //    e.model.set("Quantity",222);
+
+                    //    row.find("td.smso_A1A4").text((item.A1 + item.A4).toString());
+
+                    //  
+                    var container = e.container; //reference to the editor container
+ 
+                    var productDropDownList = container.find("[data-role=dropdownlist]").data("kendoDropDownList"); //find widget element and then get the widget instance
+                    // if DropDownListwidget is found
+                    if (productDropDownList) {
+                        //  console.log("DropDownList", productDropDownList);
+                    }
+
+                    var priceNumericTextBox = container.find("[data-role=numerictextbox]").data("kendoNumericTextBox"); //find widget element and then the widget instance
+                    if (priceNumericTextBox) {
+                        //  
+                       //   $("#grid").data("kendoNumericTextBox").trigger("change");
+                        //  console.log("NumericTextBox", priceNumericTextBox);
+                    }
+
+                    //   ChangeSubTotal();
+                 //   console.log( e.container.find(this));
+                    //e.container.find(this).click(function(){
+                    //    console.log("eeerr");
+                    //});
+                    var grid = this;
+                    var fieldName = grid.columns[e.container.index()].field;
+                    grid.columns[e.container.index()].onclick=function(){console.log("ad");};
+                    //  console.log(grid.columns[e.container.index()]);
+                }
+                
+
+            });
+
+          
+
+
+            //ComboBox-CustName
+            var custName = [];
+            var array=@Html.Raw(Json.Encode(@ViewBag.CustName));
+            for(var i=0;i<array.length;i++) {
+                custName.push({text:array[i].Text,value:array[i].Value});
+            }
+
+            $("#CustName").kendoComboBox({
+                dataTextField:"text",
+                dataValueField:"value",
+                dataSource:custName,
+                filter:"contains",
+                suggest:true,
+                index:0
+            });
+
+            //ComboBox-EmpName
+            var empName=[];
+            var array=@Html.Raw(Json.Encode(@ViewBag.EmpName));
+            for(var i=0;i<array.length;i++){
+                empName.push({text:array[i].Text,value:array[i].Value});
+            }
+
+            $("#EmpName").kendoComboBox({
+                dataTextField:"text",
+                dataValueField:"value",
+                dataSource:empName,
+                filter:"contains",
+                suggest:true,
+                index:0
+            });
+
+            //ComboBox-ShipCompany
+            var shipCompany=[];
+            var array=@Html.Raw(Json.Encode(ViewBag.ShipCompany));
+            for(var i=0;i<array.length;i++){
+                shipCompany.push({text:array[i].Text,value:array[i].Value});
+            }
+
+            $("#ShipCompany").kendoComboBox({
+                dataTextField:"text",
+                dataValueField:"value",
+                dataSource:shipCompany,
+                filter:"contains",
+                suggest:true,
+                index:0
+            });
+
+
+            //DataPicker
+            $("#OrderDate").kendoDatePicker({
+                format:"yyyy/MM/dd",
+                animation: {
+                    close: {
+                        effects: "fadeOut zoom:out",
+                        duration: 300
+                    },
+                    open: {
+                        effects: "fadeIn zoom:in",
+                        duration: 300
+                    }
+                }
+            });
+            $("#RequireDate").kendoDatePicker({
+                format:"yyyy/MM/dd",
+                animation: {
+                    close: {
+                        effects: "fadeOut zoom:out",
+                        duration: 300
+                    },
+                    open: {
+                        effects: "fadeIn zoom:in",
+                        duration: 300
+                    }
+                }
+            });
+            $("#ShipDate").kendoDatePicker({
+                format:"yyyy/MM/dd",
+                animation: {
+                    close: {
+                        effects: "fadeOut zoom:out",
+                        duration: 300
+                    },
+                    open: {
+                        effects: "fadeIn zoom:in",
+                        duration: 300
+                    }
+                }
+            });
+
+            //button
+            $("#SaveData").kendoButton();
+            $("#beforePage").kendoButton();
+        });
+
+        function SubTotalChange_Editor(container, options){
+            console.log( container );
+            $('<input data-bind="value:' + options.field + '"/>')
+             .appendTo(container).kendoNumericTextBox({
+                 autoBind: true,
+                 change:ChangeSubTotal
+             });
+        }
+
+        function productDropDownEditor(container, options) {
+            var Product=[];
+            Product.push({ProductID:0,ProductName: "-Select-"});
+            $.ajax({
+                type:'get',
+                url:'@Url.Action("getProduct")',
+                async:false,
+                success:function(result){
+                    $.each(result,function(i,field){
+                        var Myfield=field.split(',');
+                        Product.push({ProductID: Myfield[0],ProductName: Myfield[1]});
+                    });
+                    console.log("ok");
+                
+                },error:function(){
+                    console.log(error);
+                }
+            });
+
+            $('<input required data-text-field="ProductName" data-value-field="ProductID" data-bind="value:' + options.field + '"/>')
+            .appendTo(container)
+            .kendoDropDownList({
+                autoBind: true,
+                dataTextField: "ProductName",
+                dataValueField: "ProductID",
+                dataSource:Product,
+                change:onChange_productDropDown
+            });
+        }
+
+        function onChange_productDropDown(e){
+            console.log(e.sender.text()+" "+e.sender.value());
+            
+            $.ajax({
+                type: 'post',
+                url: '@Url.Action("getProductPrice")',
+                data: {
+                    index: e.sender.value()
+                }, success: function (result) {
+                    model.set("UnitPrice",result);
+                    ChangeSubTotal();
+                }, error: function () {
+                    alert("error");
+                }
+            });
+            //可抓所有tr
+            var theGrid = $("#grid").data("kendoGrid");
+            var tr = $("#grid tbody").find('tr').each(function () {
+                var model =  theGrid.dataItem(this);
+                kendo.bind(this,model);
+            });
+        }
+        function aa123(){
+            console.log("123");
+        }
+        function ChangeSubTotal()
+        { 
+            var subtotal=model.UnitPrice*model.Quantity;
+            model.set("SubTotal",subtotal);
+        }
+
+
 
 
         document.getElementById("SaveData").onclick = function () {
@@ -323,6 +583,10 @@
             var re = /(\d{1,3})(?=(\d{3})+$)/g;
             return arr[0].replace(re, "$1,") + (arr.length == 2 ? "." + arr[1] : "");
         }
+
+
+
+
 
 
     </script>

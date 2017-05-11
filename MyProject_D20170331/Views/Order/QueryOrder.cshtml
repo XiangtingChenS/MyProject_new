@@ -69,7 +69,9 @@
     @*<header style="background-color:black; height:50px;"></header>*@
     <div class="container">
 
-        <div style="background-color:black;color:white;font-size:32px;margin-top:20px;border-radius:10px 10px 0px 0px;"><span style="padding:10px">訂單查詢</span></div>
+        <div style="background-color:black;color:white;font-size:32px;margin-top:20px;border-radius:10px 10px 0px 0px;">
+             <span style="padding:10px">訂單查詢</span>
+        </div>
         <table class="table table-bordered">
             <tr>
                 <td><b>訂單編號</b></td>
@@ -194,7 +196,6 @@
             for(var i = 0; i < array.length; i++) {
                 empName.push({text:array[i].Text, value:array[i].Value});
             }
-
             $("#EmpName").kendoComboBox({
                 dataTextField: "text",
                 dataValueField: "value",
@@ -210,7 +211,6 @@
             for(var i = 0; i < array.length; i++) {
                 shipCompany.push({text:array[i].Text, value:array[i].Value});
             }
-
             $("#ShipCompany").kendoComboBox({
                 dataTextField: "text",
                 dataValueField: "value",
@@ -235,7 +235,6 @@
                     }
                 }
             });
-
             $("#shipDate").kendoDatePicker({
                 format: "yyyy/MM/dd",
                 animation: {
@@ -249,7 +248,6 @@
                     }
                 }
             });
-
             $("#requireDate").kendoDatePicker({
                 format: "yyyy/MM/dd",
                 animation: {
@@ -271,7 +269,7 @@
             $("#MyInsertOrder").kendoButton();
 
         });
-
+    //---end document ready
 
 
         document.getElementById("MyClean").onclick = function () {

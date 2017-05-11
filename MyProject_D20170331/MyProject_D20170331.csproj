@@ -141,6 +141,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="img\back.jpg" />
     <Content Include="kendo\js\cultures\kendo.culture.af-ZA.min.js.map" />
     <Content Include="kendo\js\cultures\kendo.culture.af.min.js.map" />
     <Content Include="kendo\js\cultures\kendo.culture.am-ET.min.js.map" />
