@@ -99,14 +99,11 @@
                     <td>
                         <input type="text" id="OrderDate" name="OrderDate" class="required" required validationMessage="請輸入這個欄位" />
                         <span data-for='OrderDate' class='k-invalid-msg'></span>
-                        @*<input id="OrderDate" value="年 / 月 / 日" class="required" />*@
                     </td>
                     <td><span style="color:red">*</span><b>需要日期</b></td>
                     <td>
-                        <input type="text" id="RequireDate" name="RequireDate" class="required" required validationMessage="請輸入這個欄位" />
+                        <input type="text" id="RequireDate" name="RequireDate" class="required" required validationMessage="請輸入這個欄位" data-greaterdate-field="OrderDate" data-greaterdate-msg='必須大於訂購日期'  />
                         <span data-for='RequireDate' class='k-invalid-msg'></span>
-
-                        @*<input id="RequireDate" value="年 / 月 / 日" class="required" />*@
                     </td>
                 </tr> 
                 <tr>
@@ -119,7 +116,7 @@
                     <td><span style="color:red">*</span><b>出貨公司名稱</b></td>
                     <td colspan="3">
 
-                        <input id="ShipCompany" name="Room" class="required" required  />
+                        <input id="ShipCompany" class="required" required  />
 
 
                         @*<input  id="ShipCompany" name="Room" class="required" required validationMessage="請輸入這個欄位" />
@@ -156,12 +153,10 @@
                     <td><b>出貨地區</b></td>
                     <td>
                         <input id="ShipRegion" class="k-textbox"/>
-                        @*@Html.TextBox("ShipRegion")*@
                     </td>
                     <td><b>郵遞區號</b></td>
                     <td>
                         <input id="ShipPostalCode"  class="k-textbox"/>
-                        @*@Html.TextBox("ShipPostalCode")*@
                     </td>
                 </tr>
                 <tr>
@@ -203,19 +198,6 @@
 
         <br><br><br><br><br><br>
 
-        @*<input id="addOrderDetail" type="button" value="+新增商品" />
-        <table id="tab" class="table table-bordered">
-            <tbody id="tab-tbody">
-                <tr>
-                    <td>商品</td>
-                    <td>單價</td>
-                    <td>數量</td>
-                    <td>小計</td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>*@
-
     </div>
 
     <script id="errorTemplate" type="text/x-kendo-template">
@@ -225,62 +207,33 @@
     </script>
 
     <script>
-        $(function () {
-            var container = $("#MyForm");
-            kendo.init(container);
-            container.kendoValidator({
-                rules: {
-                    //customRule1: function(input){
-                    //    // all of the input must have a value
-                    //    console.log(input);
-                    //    if(input.is("[name=Room]"))
-                    //    {
-                            
-                    //        console.log("aa");
-                    //        return true;
-                    //    }
-                    //    console.log("aa false");
-                    //    return false;
-                    //  //  return $.trim(input.val()) !== "";
-                    //},messages: {
-                    //    customRule1: "All fields are required"
-                    //   // customRule2: "Your UserName must be Tom"
-                    //}
-                    //    //greaterdate: function (input) {
-                    //    //    if (input.is("[data-greaterdate-msg]") && input.val() != "") {                                    
-                    //    //        var date = kendo.parseDate(input.val()),
-                    //    //            otherDate = kendo.parseDate($("[name='" + input.data("greaterdateField") + "']").val());
-                    //    //        return otherDate == null || otherDate.getTime() < date.getTime();
-                    //    //    }
 
-                    //    //    return true;
-                    //    //}
-                    //      invalidRoom: function (input) {
-                    //        if(input.is("[name=Room]"))
-                    //        {
-                    //            console.log("aa"+input.val());
-                    //            // if (input.val()!= "" && $("#Room").data("kendoComboBox").selectedIndex == -1)
-                    //            if (input.val()== "" && $("[name=Room]").data("kendoComboBox").selectedIndex == 0)
-                    //            {
-                    //                return input.val() === "Test"
-                    //                //return false;
-                    //            }
-                    //        }
-                    //        return input.val() === "Test"
-                    //        return true;
-                    //    }
-                    //},messages: {
-                    //   // invalidRoom: "Room number is invalid."        
-                }
-            });
-        });
-
-
-
-
-        var eee;
+       // var eee;
         var model;
         $(document).ready(function () {
+
+            //Date Validator
+            $(function () {
+                var container = $("#MyForm");
+                kendo.init(container);
+                container.kendoValidator({
+                    rules: {
+                        greaterdate: function (input) {
+                            console.log("12");
+                            if (input.is("[data-greaterdate-msg]")&& input.val()!="") {                                    console.log(input.data("greaterdateField"));
+                                var date = kendo.parseDate(input.val()),
+                                    otherDate = kendo.parseDate($("[name='" + input.data("greaterdateField") + "']").val());
+                                console.log(otherDate);
+                                return otherDate == null || otherDate.getTime() < date.getTime();
+                            }
+
+                            return true;
+                        }
+                    }
+                });
+            });
+
+
             var dataSource = new kendo.data.DataSource({
                 schema: {
                     model: {
@@ -307,7 +260,7 @@
                     { command: "destroy", title: "", width: "150px" }],
                 editable: true,
                 edit: function(e) {
-                    eee=e;
+                  //  eee=e;
                     model = e.model; //reference to the model that is about the be edited
          
                     var container = e.container; //reference to the editor container
@@ -531,10 +484,9 @@
 
       
         var validator = $("#MyForm").data("kendoValidator");
-        if (validator.validate()) {
-            saveData();
-        }
-       
+            if (validator.validate()) {
+                saveData();
+            }
        };
 
         //----  notification          
@@ -641,10 +593,7 @@
         }
 
 
-
-
-
-
     </script>
+  
 </body>
 </html>

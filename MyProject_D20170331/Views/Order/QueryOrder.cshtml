@@ -77,49 +77,41 @@
                 <td><b>訂單編號</b></td>
                 <td colspan="3">
                     <input id="OrderId"  class="k-textbox" @*style="border-color:#10c4b2"*@ />
-                    @*@Html.TextBox("OrderId")*@
                 </td>
             </tr>
             <tr>
                 <td><b>客戶名稱</b></td>
                 <td colspan="3">
                     <input id="CustName" class="k-textbox" @*style="border-color:#10c4b2"*@ />
-                    @*@Html.TextBox("CustName")*@
                 </td>
             </tr>
             <tr>
                 <td><b>負責員工</b></td>
                 <td colspan="3">
                     <input id="EmpName" placeholder="-Select-" />
-                    @*@Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName)*@
                 </td>
             </tr>
             <tr>
                 <td><b>出貨公司</b></td>
                 <td colspan="3">
                     <input id="ShipCompany" placeholder="-Select-" />
-                    @*@Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany)*@
                 </td>
             </tr>
             <tr>
                 <td><b>訂購日期</b></td>
                 <td>
                     <input id="orderDate" value="年 / 月 / 日" />
-                    @*<input type="date" id="orderDate">*@
                 </td>
                 <td><b>出貨日期</b></td>
                 <td>
                     <input id="shipDate" value="年 / 月 / 日" />
-                    @*<input type="date" id="shipDate">*@
-
-                </td>
+                 </td>
 
             </tr>
             <tr>
                 <td><b>需要日期</b></td>
                 <td colspan="3">
                     <input id="requireDate" value="年 / 月 / 日" />
-                    @*<input type="date" id="requireDate">*@
                 </td>
             </tr>
 
@@ -145,8 +137,6 @@
 
 
     <div id="window"></div>
-
-
         <script type="text/x-kendo-template" id="windowTemplate" >
             <div style="text-align:center; ">
                 確定要刪除訂單編號 <strong>#= OrderID #</strong> 嗎? <br><br>
@@ -327,61 +317,8 @@
     
         function GenerateGrid(data)
         {
-            // custom logic start
-            var dataNextID = data.length + 1;
-
-            function getIndexById(id) {
-                var idx,
-                    l = data.length;
-
-                for (var j = 0; j < l; j++) {
-                    if (data[j].ProductID == id) {
-                        return j;
-                    }
-                }
-                return null;
-            }
-            // custom logic end
-
-                var dataSource = new kendo.data.DataSource({
-                    transport: {
-                        read: function (e) {
-                            // on success
-                            e.success(data);
-                            // on failure
-                            //e.error("XHR response", "status code", "error message");
-                        },
-                        create: function (e) {
-                            // assign an ID to the new item
-                            e.data.ProductID = dataNextID++;
-                            // save data item to the original datasource
-                            data.push(e.data);
-                            // on success
-                            e.success(e.data);
-                            // on failure
-                            //e.error("XHR response", "status code", "error message");
-                        },
-                        update: function (e) {
-                            // locate item in original datasource and update it
-                            data[getIndexById(e.data.ProductID)] = e.data;
-                            // on success
-                            e.success();
-                            // on failure
-                            //e.error("XHR response", "status code", "error message");
-                        },
-                        destroy: function (e) {
-                            // locate item in original datasource and remove it
-                            data.splice(getIndexById(e.data.ProductID), 1);
-                            // on success
-                            e.success();
-                            // on failure
-                            //e.error("XHR response", "status code", "error message");
-                        }
-                    },
-                    error: function (e) {
-                        // handle data operation error
-                        alert("Status: " + e.status + "; Error message: " + e.errorThrown);
-                    },
+            var dataSource = new kendo.data.DataSource({
+                   data:data,
                     pageSize: 10,
                     batch: false,
                     schema: {
@@ -405,7 +342,7 @@
                     height: "80px",
                 }).data("kendoWindow");
 
-
+            //$("[role='row']")
               var grid=$("#grid").kendoGrid({
                     dataSource: dataSource,
                     sortable: true,
@@ -416,7 +353,8 @@
                         { field: "CustomerName", title: "客戶名稱" },
                         { field: "OrderDate", title: "訂購日期", format: "{0:yyyy/MM/dd}" },
                         { field: "ShippedDate", title: "發貨日期", format: "{0:yyyy/MM/dd}" },
-                        { command: [{name:"edit"},
+                        { command: 
+                            [{name:"edit",  click:RedirectUpdatePage },
                             {name:"Delete",
                                 click: function(e){
                                     e.preventDefault();
@@ -431,7 +369,6 @@
 
                                         //delete Order
                                         deleteOrder(trData.OrderID);
-
                                         window.close();
                                     })
                                     $("#noButton").click(function(){
@@ -439,12 +376,17 @@
                                     })
                                 }
                             }
-                        ]}],
-                    editable: "inline"
+                        ]}]
+                  //  editable: "inline"
                 }).data("kendoGrid");
+        };
 
 
-            };
+        function RedirectUpdatePage(e){
+            var tr = $(e.target).closest("tr");
+            var trData = this.dataItem(tr);
+            window.location.href = "@Url.Action("UpdateOrder",new { OrderID="_ID"})".replace("_ID", trData.OrderID);
+        };
 </script>
 
 
