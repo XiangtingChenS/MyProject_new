@@ -71,6 +71,13 @@ namespace MyProject_D20170331.Controllers
             return this.Json(orderService.GetProductPrice(index),JsonRequestBehavior.AllowGet);
         }
 
+        //temp
+        [HttpPost]
+        public JsonResult getProductID(string productName)
+        {
+            return this.Json(orderService.GetProductID(productName), JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult UpdateOrder(int? OrderID)
         {

@@ -76,14 +76,14 @@
             <tr>
                 <td><b>訂單編號</b></td>
                 <td colspan="3">
-                    <input id="OrderId" style="border-color:#10c4b2" />
+                    <input id="OrderId"  class="k-textbox" @*style="border-color:#10c4b2"*@ />
                     @*@Html.TextBox("OrderId")*@
                 </td>
             </tr>
             <tr>
                 <td><b>客戶名稱</b></td>
                 <td colspan="3">
-                    <input id="CustName" style="border-color:#10c4b2" />
+                    <input id="CustName" class="k-textbox" @*style="border-color:#10c4b2"*@ />
                     @*@Html.TextBox("CustName")*@
                 </td>
             </tr>
@@ -275,8 +275,10 @@
         document.getElementById("MyClean").onclick = function () {
             document.getElementById("OrderId").value = "";
             document.getElementById("CustName").value = "";
-            document.getElementById("EmpName").selectedIndex = 0;
-            document.getElementById("ShipCompany").selectedIndex = 0;
+            $("#EmpName").data("kendoComboBox").select(0);
+            $("#ShipCompany").data("kendoComboBox").select(0);
+           // document.getElementById("EmpName").selectedIndex = 0;
+           // document.getElementById("ShipCompany").selectedIndex = 0;
             document.getElementById("orderDate").value = "年 / 月 / 日";
             document.getElementById("requireDate").value = "年 / 月 / 日";
             document.getElementById("shipDate").value = "年 / 月 / 日";
