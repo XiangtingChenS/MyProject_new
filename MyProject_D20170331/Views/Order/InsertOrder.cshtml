@@ -85,13 +85,15 @@
                 <tr>
                     <td><span style="color:red">*</span><b>客戶名稱</b></td>
                     <td colspan="3">
-                        <input id="CustName" placeholder="-Select-" class="required"  />
+                        <input id="CustName" name="CustName"  placeholder="-Select-" class="required" required sign-combobox />
+                        <span class="k-invalid-msg" data-for="CustName"></span>
                     </td>
                 </tr>
                 <tr>
                     <td><span style="color:red">*</span><b>負責員工名稱</b></td>
                     <td colspan="3">
-                        <input id="EmpName" placeholder="-Select-" class="required" />
+                        <input id="EmpName" name="EmpName" placeholder="-Select-" class="required" required sign-combobox/>
+                        <span class="k-invalid-msg" data-for="EmpName"></span>
                     </td>
                 </tr>
                 <tr>
@@ -116,17 +118,8 @@
                     <td><span style="color:red">*</span><b>出貨公司名稱</b></td>
                     <td colspan="3">
 
-                        <input id="ShipCompany" class="required" required  />
-
-
-                        @*<input  id="ShipCompany" name="Room" class="required" required validationMessage="請輸入這個欄位" />
-
-                        @*<input type="text" data-role='datepicker' id="HireDate" name="HireDate" data-type="date" required validationMessage="請輸入這個欄位" />*@
-                        @*<span data-for='ShipCompany' class='k-invalid-msg'></span>*@
-
-                        @*<input id="ShipCompany" class="required" name="ShipCompany" data-greaterdate-field="ShipCompany" required validationMessage="請輸入這個欄位" placeholder="-Select-"/>
-                        <span data-for='ShipCompany'  class='k-invalid-msg'></span>*@
-                        @*<input id="ShipCompany" placeholder="-Select-" class="required" />*@
+                        <input id="ShipCompany" name="ShipCompany"  placeholder="-Select-" class="required" required  sign-combobox />
+                        <span class="k-invalid-msg" data-for="ShipCompany"></span>
                     </td>
                 </tr>
                 <tr>
@@ -139,14 +132,10 @@
                     <td><span style="color:red">*</span><b>出貨國家</b></td>
                     <td>
                         <input id="ShipCountry" type="text" class="k-textbox required" name="ShipCountry" required validationMessage="請輸入這個欄位" />
-                        @*<input  type="text" id="ShipCountry" class="required"  required validationMessage="請輸入這個欄位"/>*@
-                       @*@Html.TextBox("ShipCountry", null, new { @class = "required" })*@
                     </td>
                     <td><span style="color:red">*</span><b>出貨城市</b></td>
                     <td>
                         <input id="ShipCity" type="text" class="k-textbox required" name="ShipCity" required validationMessage="請輸入這個欄位" />
-                        @*<input  type="text" id="ShipCity" class="required" required validationMessage="請輸入這個欄位"/>*@
-                        @*@Html.TextBox("ShipCity", null, new { @class = "required" })*@
                     </td>
                 </tr>
                 <tr>
@@ -163,14 +152,10 @@
                     <td><span style="color:red">*</span><b>出貨地址</b></td>
                     <td>
                         <input id="ShipAddress" type="text" class="k-textbox required" name="ShipAddress"  required validationMessage="請輸入這個欄位" />
-                        @*<input  type="text" id="ShipAddress" class="required" required="required" />*@
-                        @*@Html.TextBox("ShipAddress", null, new { @class = "required" })*@
                     </td>
                     <td><span style="color:red">*</span><b>出貨說明</b></td>
                     <td>
                         <input id="ShipName" type="text" class="k-textbox required" name="ShipName"  required validationMessage="請輸入這個欄位" />
-                        @*<input  type="text" id="ShipName" class="required" required data-required-msg="請填寫這個欄位" />*@
-                        @*@Html.TextBox("ShipName", null, new { @class = "required" })*@
                     </td>
                 </tr>
                 <tr>
@@ -219,16 +204,29 @@
                 container.kendoValidator({
                     rules: {
                         greaterdate: function (input) {
-                            console.log("12");
-                            if (input.is("[data-greaterdate-msg]")&& input.val()!="") {                                    console.log(input.data("greaterdateField"));
+                       //    console.log("12");
+                            if (input.is("[data-greaterdate-msg]")&& input.val()!="") {                                
+                                console.log(input.data("greaterdateField"));
                                 var date = kendo.parseDate(input.val()),
                                     otherDate = kendo.parseDate($("[name='" + input.data("greaterdateField") + "']").val());
                                 console.log(otherDate);
                                 return otherDate == null || otherDate.getTime() < date.getTime();
                             }
-
+                            return true;
+                        },
+                        aaa:function(input){
+                            if(input.is("[sign-combobox]"))
+                            {
+                                if(input.data("kendoComboBox").selectedIndex==0)
+                                {
+                                    return false;
+                                }
+                            }
                             return true;
                         }
+                    },
+                    messages:{
+                        aaa:"請選擇這個欄位"
                     }
                 });
             });
@@ -381,22 +379,6 @@
             $("#beforePage").kendoButton();
 
 
-            //Validator
-            var validator = $("#MyForm").kendoValidator().data("kendoValidator"),
-            status = $(".status");
-
-            $("form").submit(function(event) {
-                event.preventDefault();
-                if (validator.validate()) {
-                    status.text("Hooray! Your tickets has been booked!")
-                        .removeClass("invalid")
-                        .addClass("valid");
-                } else {
-                    status.text("Oops! There is invalid data in the form.")
-                        .removeClass("valid")
-                        .addClass("invalid");
-                }
-            });
         });
 
         function SubTotalChange_Editor(container, options){
