@@ -354,8 +354,8 @@
                         { field: "OrderDate", title: "訂購日期", format: "{0:yyyy/MM/dd}" },
                         { field: "ShippedDate", title: "發貨日期", format: "{0:yyyy/MM/dd}" },
                         { command: 
-                            [{name:"edit",  click:RedirectUpdatePage },
-                            {name:"Delete",
+                            [{name:"edit", text: "編輯", click:RedirectUpdatePage },
+                            {name:"Delete",text:"刪除",
                                 click: function(e){
                                     e.preventDefault();
                                     var tr = $(e.target).closest("tr");

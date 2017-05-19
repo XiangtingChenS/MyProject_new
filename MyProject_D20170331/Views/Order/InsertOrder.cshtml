@@ -20,22 +20,22 @@
 
     <script src="~/kendo/js/kendo.all.min.js"></script>
     <style>
-            span.k-widget.k-tooltip-validation {
-                display: inline-block;
-                width: 160px;
-                text-align: left;
-                border: 0;
-                padding: 0;
-                margin: 0;
-                background: none;
-                box-shadow: none;
-                color: red;
-                    font-size:10px;
-            }
+        span.k-widget.k-tooltip-validation {
+            display: inline-block;
+            width: 160px;
+            text-align: left;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            background: none;
+            box-shadow: none;
+            color: red;
+                font-size:10px;
+        }
                 
-            .k-tooltip-validation .k-warning {
-                display: none;
-            }
+        .k-tooltip-validation .k-warning {
+            display: none;
+        }
 
         /*notification css*/
         .demo-section p {
@@ -72,7 +72,7 @@
 
      </style>
 </head>
-@*<body style="background-image: url('../../img/back.jpg'); background-size:cover;">*@
+
 <body>
 
     <div class="container">
@@ -117,7 +117,6 @@
                 <tr>
                     <td><span style="color:red">*</span><b>出貨公司名稱</b></td>
                     <td colspan="3">
-
                         <input id="ShipCompany" name="ShipCompany"  placeholder="-Select-" class="required" required  sign-combobox />
                         <span class="k-invalid-msg" data-for="ShipCompany"></span>
                     </td>
@@ -192,8 +191,6 @@
     </script>
 
     <script>
-
-       // var eee;
         var model;
         $(document).ready(function () {
 
@@ -204,12 +201,10 @@
                 container.kendoValidator({
                     rules: {
                         greaterdate: function (input) {
-                       //    console.log("12");
                             if (input.is("[data-greaterdate-msg]")&& input.val()!="") {                                
                                 console.log(input.data("greaterdateField"));
                                 var date = kendo.parseDate(input.val()),
                                     otherDate = kendo.parseDate($("[name='" + input.data("greaterdateField") + "']").val());
-                                console.log(otherDate);
                                 return otherDate == null || otherDate.getTime() < date.getTime();
                             }
                             return true;
@@ -248,7 +243,6 @@
             //<span class='k-icon k-i-close' id='temp' style='float: right;' onclick='ChangeSubTotal()'></span>"
             $("#grid").kendoGrid({
                 dataSource: dataSource,
-                //   pageable: true,
                 toolbar: ["create"],
                 columns: [
                     { field:"Product",title:"商品",  editor: productDropDownEditor, template: "#=Product.ProductName#" },
@@ -258,27 +252,8 @@
                     { command: "destroy", title: "", width: "150px" }],
                 editable: true,
                 edit: function(e) {
-                  //  eee=e;
-                    model = e.model; //reference to the model that is about the be edited
-         
-                    var container = e.container; //reference to the editor container
- 
-                    var productDropDownList = container.find("[data-role=dropdownlist]").data("kendoDropDownList"); //find widget element and then get the widget instance
-                    // if DropDownListwidget is found
-                    if (productDropDownList) {
-                        //  console.log("DropDownList", productDropDownList);
-                    }
-
-                    var priceNumericTextBox = container.find("[data-role=numerictextbox]").data("kendoNumericTextBox"); //find widget element and then the widget instance
-                    if (priceNumericTextBox) {
-                        //  
-                       //   $("#grid").data("kendoNumericTextBox").trigger("change");
-                        //  console.log("NumericTextBox", priceNumericTextBox);
-                    }
-
+                    model = e.model; 
                 }
-                
-
             });
 
           
@@ -405,7 +380,7 @@
                     console.log("ok");
                 
                 },error:function(){
-                    console.log(error);
+                    console.log("error");
                 }
             });
 
@@ -435,7 +410,6 @@
                     alert("error");
                 }
             });
-
         }
 
 
@@ -463,12 +437,10 @@
 
 
         document.getElementById("SaveData").onclick = function () {
-
-      
-        var validator = $("#MyForm").data("kendoValidator");
-            if (validator.validate()) {
-                saveData();
-            }
+            var validator = $("#MyForm").data("kendoValidator");
+                if (validator.validate()) {
+                    saveData();
+                }
        };
 
         //----  notification          
@@ -517,8 +489,6 @@
                 }
             }
 
-
-
             //save
           $.ajax({
                 type: 'post',
@@ -549,7 +519,6 @@
                   notification.show({
                       title: "Insert Success"
                   }, "error");
-
                    // alert("success");
 
                 }, error: function () { alert("Error"); }

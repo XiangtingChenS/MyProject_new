@@ -14,123 +14,198 @@
     <script src="~/Scripts/jquery-1.9.1.min.js"></script>
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
 
+    <!--kendo-->
+    <link href="~/kendo/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/kendo/styles/kendo.flat.min.css" rel="stylesheet" />
 
+    <script src="~/kendo/js/kendo.all.min.js"></script>
+    <style>
+        span.k-widget.k-tooltip-validation {
+            display: inline-block;
+            width: 160px;
+            text-align: left;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            background: none;
+            box-shadow: none;
+            color: red;
+            font-size: 10px;
+        }
+
+        .k-tooltip-validation .k-warning {
+            display: none;
+        }
+
+        /*notification css*/
+        .demo-section p {
+            margin: 3px 0 20px;
+            line-height: 50px;
+        }
+
+        .demo-section .k-button {
+            width: 250px;
+        }
+
+        .k-notification {
+            border: 0;
+        }
+
+
+
+        /* Error template */
+        .k-notification-error.k-group {
+            background: rgba(100%,0%,0%,.7);
+            color: #ffffff;
+        }
+
+        .wrong-pass {
+            width: 200px;
+            height: 60px;
+        }
+
+            .wrong-pass h3 {
+                font-size: 1.5em;
+                padding: 10px 20px 0px 20px;
+            }
+        /* end notification css*/
+    </style>
 </head>
 <body>
     <div>
         <div class="container">
-            <h3>新增訂單</h3>
-            <table class="table table-bordered">
-                <tr>
-                    <td>訂單編號</td>
-                    <td colspan="3">
-                        <spna id="OrderId" />
-                        @*@Html.TextBox("OrderId",null,new { disabled = "true" })*@
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>客戶名稱</td>
-                    <td colspan="3">
-                        @Html.DropDownList("CustName", (List<SelectListItem>)ViewBag.CustName, new { @class = "required" })
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>負責員工名稱</td>
-                    <td colspan="3">
-                        @Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName, new { @class = "required" })
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>訂單日期</td>
-                    <td>
-                        <input id="OrderDate" type="date"  class="required">
-                    </td>
-                    <td><span style="color:red">*</span>需要日期</td>
-                    <td>
-                        <input id="RequireDate" type="date"  class="required">
-                    </td>
-                </tr>
-                <tr>
-                    <td>出貨日期</td>
-                    <td colspan="3">
-                        <input id="ShipDate" type="date" >
-                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>出貨公司名稱</td>
-                    <td colspan="3">
-                        @Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany,new { @class="required"})
-                        @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
-                    </td>
-                </tr>
-                <tr>
-                    <td>運費</td>
-                    <td colspan="3">
-                        <input id="Freight" type="text" style="text-align: right" />
-                        @*@Html.TextBox("Freight")*@
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>出貨國家</td>
-                    <td>
-                        @Html.TextBox("ShipCountry",null,new { @class="required"})
-                    </td>
-                    <td><span style="color:red">*</span>出貨城市</td>
-                    <td>
-                        @Html.TextBox("ShipCity",null,new { @class="required"})
-                    </td>
-                </tr>
-                <tr>
-                    <td>出貨地區</td>
-                    <td>
-                        @Html.TextBox("ShipRegion")
-                    </td>
-                    <td>郵遞區號</td>
-                    <td>
-                        @Html.TextBox("ShipPostalCode")
-                    </td>
-                </tr>
-                <tr>
-                    <td><span style="color:red">*</span>出貨地址</td>
-                    <td>
-                        @Html.TextBox("ShipAddress",null,new { @class="required"})
-                    </td>
-                    <td><span style="color:red">*</span>出貨說明</td>
-                    <td>
-                        @Html.TextBox("ShipName",null,new { @class="required"})
-                    </td>
-                </tr>
-                <tr>
-                    <td>訂單金額總計</td>
-                    <td colspan="3" align="right"><span id="allTotal">$ 0</span></td>
-                </tr>
+            @*<h3>修改訂單</h3>*@
+            <div style="background-color:black;color:white;font-size:32px;margin-top:20px;border-radius:10px 10px 0px 0px;">
+                <span style="padding:10px">修改訂單</span>
+            </div>
+            <form id="MyForm" data-role="validator" novalidate="novalidate">
+                <table class="table table-bordered">
+                    <tr>
+                        <td><b>訂單編號</b></td>
+                        <td colspan="3">
+                            <spna id="OrderId" />
+                            @*@Html.TextBox("OrderId",null,new { disabled = "true" })*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span style="color:red">*</span><b>客戶名稱</b></td>
+                        <td colspan="3">
+                            <input id="CustName" name="CustName" placeholder="-Select-" class="required" required sign-combobox />
+                            <span class="k-invalid-msg" data-for="CustName"></span>
+                            @*@Html.DropDownList("CustName", (List<SelectListItem>)ViewBag.CustName, new { @class = "required" })*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span style="color:red">*</span><b>負責員工名稱</b></td>
+                        <td colspan="3">
+                            <input id="EmpName" name="EmpName" placeholder="-Select-" class="required" required sign-combobox />
+                            <span class="k-invalid-msg" data-for="EmpName"></span>
+                            @*@Html.DropDownList("EmpName", (List<SelectListItem>)ViewBag.EmpName, new { @class = "required" })*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span style="color:red">*</span><b>訂單日期</b></td>
+                        <td>
+                            <input type="text" id="OrderDate" name="OrderDate" class="required" required validationMessage="請輸入這個欄位" />
+                            <span data-for='OrderDate' class='k-invalid-msg'></span>
+                            @*<input id="OrderDate" type="date"  class="required">*@
+                        </td>
+                        <td><span style="color:red">*</span><b>需要日期</b></td>
+                        <td>
+                            <input type="text" id="RequireDate" name="RequireDate" class="required" required validationMessage="請輸入這個欄位" data-greaterdate-field="OrderDate" data-greaterdate-msg='必須大於訂購日期' />
+                            <span data-for='RequireDate' class='k-invalid-msg'></span>
+                            @*<input id="RequireDate" type="date"  class="required">*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>出貨日期</b></td>
+                        <td colspan="3">
+                            <input id="ShipDate" type="date">
+                            @*@Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span style="color:red">*</span><b>出貨公司名稱</b></td>
+                        <td colspan="3">
+                            <input id="ShipCompany" name="ShipCompany" placeholder="-Select-" class="required" required sign-combobox />
+                            <span class="k-invalid-msg" data-for="ShipCompany"></span>
+                            @*@Html.DropDownList("ShipCompany", (List<SelectListItem>)ViewBag.ShipCompany,new { @class="required"})*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>運費</b></td>
+                        <td colspan="3">
+                            <input id="Freight" type="text" class="k-textbox" style="text-align: right" />
+                            @*<input id="Freight" type="text" style="text-align: right" />*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span style="color:red">*</span><b>出貨國家</b></td>
+                        <td>
+                            <input id="ShipCountry" type="text" class="k-textbox required" name="ShipCountry" required validationMessage="請輸入這個欄位" />
+                            @*@Html.TextBox("ShipCountry",null,new { @class="required"})*@
+                        </td>
+                        <td><span style="color:red">*</span><b>出貨城市</b></td>
+                        <td>
+                            <input id="ShipCity" type="text" class="k-textbox required" name="ShipCity" required validationMessage="請輸入這個欄位" />
+                            @*@Html.TextBox("ShipCity",null,new { @class="required"})*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>出貨地區</b></td>
+                        <td>
+                            <input id="ShipRegion" class="k-textbox" />
+                            @*@Html.TextBox("ShipRegion")*@
+                        </td>
+                        <td><b>郵遞區號</b></td>
+                        <td>
+                            <input id="ShipPostalCode" class="k-textbox" />
+                            @*@Html.TextBox("ShipPostalCode")*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span style="color:red">*</span><b>出貨地址</b></td>
+                        <td>
+                            <input id="ShipAddress" type="text" class="k-textbox required" name="ShipAddress" required validationMessage="請輸入這個欄位" />
+                            @*@Html.TextBox("ShipAddress",null,new { @class="required"})*@
+                        </td>
+                        <td><span style="color:red">*</span><b>出貨說明</b></td>
+                        <td>
+                            <input id="ShipName" type="text" class="k-textbox required" name="ShipName" required validationMessage="請輸入這個欄位" />
+                            @*@Html.TextBox("ShipName",null,new { @class="required"})*@
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>訂單金額總計</b></td>
+                        <td colspan="3" align="right"><span id="allTotal">$ 0</span></td>
+                    </tr>
 
-                <tr>
-                    <td></td>
-                    <td colspan="3">
-                        <input id="SaveData" type="button" value="存檔">
-                        <input id="DeleteOrder" type="button" value="刪除本筆訂單">
-                        <input id="beforePage" type="button" value="回前一頁" />
-                    </td>
+                    <tr>
+                        <td></td>
+                        <td colspan="3">
+                            <input id="SaveData" type="button" value="存檔">
+                            <input id="DeleteOrder" type="button" value="刪除本筆訂單">
+                            <input id="beforePage" type="button" value="回前一頁" />
+                        </td>
 
-                </tr>
-            </table>
+                    </tr>
+                </table>
+            </form>
 
             <h3>訂單明細</h3>
-            <input id="addOrderDetail" type="button" value="+新增商品" />
-            <table id="tab" class="table table-bordered">
-                <tbody id="tab-tbody">
-                    <tr>
-                        <td>商品</td>
-                        <td>單價</td>
-                        <td>數量</td>
-                        <td>小計</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+
+            <div id="example">
+                <span id="notification" style="display:none;"></span>
+                <div id="grid"></div>
+            </div>
+            <br><br><br><br><br><br>
+
+            <script id="errorTemplate" type="text/x-kendo-template">
+                <div class="wrong-pass">
+                    <h3>#= title #</h3>
+                </div>
+            </script>
+</div>
 
         <script>
             var getProductArray = [];
@@ -142,6 +217,40 @@
             });
             // });
             $(document).ready(function () {
+                //Date Validator
+                $(function () {
+                    var container = $("#MyForm");
+                    kendo.init(container);
+                    container.kendoValidator({
+                        rules: {
+                            greaterdate: function (input) {
+                                if (input.is("[data-greaterdate-msg]")&& input.val()!="") {                                
+                                    console.log(input.data("greaterdateField"));
+                                    var date = kendo.parseDate(input.val()),
+                                        otherDate = kendo.parseDate($("[name='" + input.data("greaterdateField") + "']").val());
+                                    return otherDate == null || otherDate.getTime() < date.getTime();
+                                }
+                                return true;
+                            },
+                            vaildateCombobox:function(input){
+                                if(input.is("[sign-combobox]"))
+                                {
+                                    if(input.data("kendoComboBox").selectedIndex==0)
+                                    {
+                                        return false;
+                                    }
+                                }
+                                return true;
+                            }
+                        },
+                        messages:{
+                            vaildateCombobox:"請選擇這個欄位"
+                        }
+                    });
+                });
+
+
+                //-----
                 $.ajax({
                     type: 'post',
                     url: '@Url.Action("UpdateOrder_Data")',
@@ -149,15 +258,12 @@
                         OrderID: '@ViewBag.UpdateOrderId'
                     }, success: function (result) {
                         document.getElementById("OrderId").innerHTML = result.OrderID;
-
-                        document.getElementById("CustName").value = result.CustomerID;
-                        document.getElementById("EmpName").value = result.EmployeeID;
-
+                        $("#CustName").data("kendoComboBox").value(result.CustomerID);
+                        $("#EmpName").data("kendoComboBox").value(result.EmployeeID);
                         document.getElementById("OrderDate").value = replaceDate(result.OrderDate);
                         document.getElementById("RequireDate").value = replaceDate(result.RequiredDate);
                         document.getElementById("ShipDate").value = replaceDate(result.ShippedDate);
-
-                        document.getElementById("ShipCompany").value = result.ShipperID;
+                        $("#ShipCompany").data("kendoComboBox").value(result.ShipperID);
                         document.getElementById("Freight").value = result.Freight;
 
                         document.getElementById("ShipCountry").value = result.ShipCountry;
@@ -168,153 +274,262 @@
                         document.getElementById("ShipName").value = result.ShipName;
 
                         console.log(result);
+                          
+                        //--------
+                        var data=[];
                         for (k = 0; k < result.ODitem.length; k++) {
-                            document.getElementById("addOrderDetail").onclick();
-
-                            document.getElementsByClassName("DomProductSelect")[k].value = result.ODitem[k];
-                            document.getElementsByClassName("DomProductPrice")[k].value = result.ODprice[k];
-                            document.getElementsByClassName("DomProductQuantity")[k].value = result.ODquantity[k];
-                            ChangeTotal(document.getElementsByClassName("DomProductSelect")[k]);
-                            //  document.getElementsByClassName("DomProductSelect")[k].onchange();
+                            $.ajax({
+                                type:'get',
+                                url:'@Url.Action("getProduct")',
+                                async:false,
+                                success:function(message){
+                                    $.each(message,function(i,field){
+                                        var Myfield=field.split(',');
+                                        if(Myfield[0]==result.ODitem[k]){
+                                            data.push({Product: {ProductID:Myfield[0],ProductName: Myfield[1]},UnitPrice:result.ODprice[k],Quantity:result.ODquantity[k],SubTotal:result.ODprice[k]*result.ODquantity[k]});
+                                            return false;
+                                        }
+                                    });
+                                },error:function(){
+                                    console.log("error");
+                                }
+                            });
                         }
-
+                        
+                        setOrderDetail(data);
+                        
                     }, error: function () {
                         alert("error");
                         document.getElementById("SaveData").disabled = true;
                         document.getElementById("DeleteOrder").disabled = true;
                     }
                 });
+
+
+                //ComboBox-CustName
+                var custName = [];
+                var array=@Html.Raw(Json.Encode(@ViewBag.CustName));
+                for(var i=0;i<array.length;i++) {
+                    custName.push({text:array[i].Text,value:array[i].Value});
+                }
+
+                $("#CustName").kendoComboBox({
+                    dataTextField:"text",
+                    dataValueField:"value",
+                    dataSource:custName,
+                    filter:"contains",
+                    suggest:true,
+                    index:0
+                });
+
+                //ComboBox-EmpName
+                var empName=[];
+                var array=@Html.Raw(Json.Encode(@ViewBag.EmpName));
+                for(var i=0;i<array.length;i++){
+                    empName.push({text:array[i].Text,value:array[i].Value});
+                }
+
+                $("#EmpName").kendoComboBox({
+                    dataTextField:"text",
+                    dataValueField:"value",
+                    dataSource:empName,
+                    filter:"contains",
+                    suggest:true,
+                    index:0
+                });
+
+                //ComboBox-ShipCompany
+                var shipCompany=[];
+                var array=@Html.Raw(Json.Encode(ViewBag.ShipCompany));
+                for(var i=0;i<array.length;i++){
+                    shipCompany.push({text:array[i].Text,value:array[i].Value});
+                }
+
+                $("#ShipCompany").kendoComboBox({
+                    dataTextField:"text",
+                    dataValueField:"value",
+                    dataSource:shipCompany,
+                    filter:"contains",
+                    suggest:true,
+                    index:0
+                });
+
+                //DataPicker
+                $("#OrderDate").kendoDatePicker({
+                    format:"yyyy/MM/dd",
+                    animation: {
+                        close: {
+                            effects: "fadeOut zoom:out",
+                            duration: 300
+                        },
+                        open: {
+                            effects: "fadeIn zoom:in",
+                            duration: 300
+                        }
+                    }
+                });
+                $("#RequireDate").kendoDatePicker({
+                    format:"yyyy/MM/dd",
+                    animation: {
+                        close: {
+                            effects: "fadeOut zoom:out",
+                            duration: 300
+                        },
+                        open: {
+                            effects: "fadeIn zoom:in",
+                            duration: 300
+                        }
+                    }
+                });
+                $("#ShipDate").kendoDatePicker({
+                    format:"yyyy/MM/dd",
+                    animation: {
+                        close: {
+                            effects: "fadeOut zoom:out",
+                            duration: 300
+                        },
+                        open: {
+                            effects: "fadeIn zoom:in",
+                            duration: 300
+                        }
+                    }
+                });
+
+
+                //button
+                $("#SaveData").kendoButton();
+                $("#DeleteOrder").kendoButton();
+                $("#beforePage").kendoButton();
+
             });
+            //end document read
+            
+
+            function setOrderDetail(data)
+            {
+                var dataSource = new kendo.data.DataSource({
+                    data:data,
+                    schema: {
+                        model: {
+                            id: "ProductID",
+                            fields: {
+                                Product: { defaultValue: { ProductID: "0", ProductName: "-Select-"} },
+                                UnitPrice: { type: "number"/*, validation: { required: true, min: 1}*/ },
+                                Quantity:{ type: "number"/*, validation: { required: true, min: 1}*/ },
+                                SubTotal:{ type: "number" /*editable: false*//*, validation: { required: true, min: 1}*/ },
+                            }
+                        }
+                    }
+                });
+                //<span class='k-icon k-i-close' id='temp' style='float: right;' onclick='ChangeSubTotal()'></span>"
+                $("#grid").kendoGrid({
+                    dataSource: dataSource,
+                    toolbar: ["create"],
+                    columns: [
+                        { field:"Product",title:"商品",  editor: productDropDownEditor, template: "#=Product.ProductName#" },
+                        { field: "UnitPrice", title: "單價",editor: SubTotalChange_Editor},
+                         { field:"Quantity",title:"數量" ,editor: SubTotalChange_Editor},
+                        { field: "SubTotal", title:"小計", format: "{0:n0}", width: "130px" },
+                        { command: [{name:"destroy"/*,click:aa*/}], title: "", width: "150px" }],
+                    editable: true,
+                    edit: function(e) {
+                        model = e.model; 
+                    }
+                });
+
+
+            }
+
+            //function aa(e)
+            //{
+            //    console.log("pp");
+            //}
+
+            
+            //---same----
+            function SubTotalChange_Editor(container, options){
+                $('<input data-bind="value:' + options.field + '"/>')
+                 .appendTo(container).kendoNumericTextBox({
+                     autoBind: true,
+                     change:ChangeSubTotal
+                 });
+            }
+
+
+            function productDropDownEditor(container, options) {
+                var Product=[];
+                Product.push({ProductID:0,ProductName: "-Select-"});
+                $.ajax({
+                    type:'get',
+                    url:'@Url.Action("getProduct")',
+                    async:false,
+                    success:function(result){
+                        $.each(result,function(i,field){
+                            var Myfield=field.split(',');
+                            Product.push({ProductID: Myfield[0],ProductName: Myfield[1]});
+                        });
+                        console.log("ok");
+                
+                    },error:function(){
+                        console.log(error);
+                    }
+                });
+
+                $('<input required data-text-field="ProductName" data-value-field="ProductID" data-bind="value:' + options.field + '"/>')
+                .appendTo(container)
+                .kendoDropDownList({
+                    autoBind: true,
+                    dataTextField: "ProductName",
+                    dataValueField: "ProductID",
+                    dataSource:Product,
+                    change:onChange_productDropDown
+                });
+            }
+
+            
+            function onChange_productDropDown(e){
+                console.log(e.sender.text()+" "+e.sender.value());
+            
+                $.ajax({
+                    type: 'post',
+                    url: '@Url.Action("getProductPrice")',
+                    data: {
+                        index: e.sender.value()
+                    }, success: function (result) {
+                        model.set("UnitPrice",result);
+                        ChangeSubTotal();
+                    }, error: function () {
+                        alert("error");
+                    }
+                });
+            }
+
+            function ChangeSubTotal()
+            { 
+                var subtotal=model.UnitPrice*model.Quantity;
+                model.set("SubTotal",subtotal);
+
+                //可抓所有tr
+                var theGrid = $("#grid").data("kendoGrid");
+                var tr = $("#grid tbody").find('tr').each(function () {
+                    var model =  theGrid.dataItem(this);
+                    kendo.bind(this,model);
+                });
+
+                var sum=0;
+                for(var i=0;i<tr.length;i++)
+                {
+                    sum+=parseInt(replaceAll(tr[i].children[3].innerText));
+                }
+                document.getElementById("allTotal").innerHTML = "$ " +formatNumber(sum);
+            }
+            // ----end same-----
 
 
             document.getElementById("beforePage").onclick = function () {
                 location.href = "/Order/QueryOrder";
             };
 
-
-
-
-            document.getElementById("addOrderDetail").onclick = function () {
-                var Tr = document.createElement("tr");
-                var Td_pro = document.createElement("td");
-                var Td_price = document.createElement("td");
-                var Td_quantity = document.createElement("td");
-                var Td_total = document.createElement("td");
-                var Td_cancel = document.createElement("td");
-
-                var selectProduct = document.createElement("select");
-                selectProduct.setAttribute("class", "DomProductSelect");
-
-                selectProduct.onchange = function () {
-                    var thisObject = this;
-                    var index = this.selectedIndex;
-                    var value = this.getElementsByTagName("option")[index].value;
-                    var rowIndex = this.parentNode.parentNode.rowIndex;
-                    if (value != 0) {
-                        $.ajax({
-                            type: 'post',
-                            url: '@Url.Action("getProductPrice")',
-                            data: {
-                                index: value
-                            }, success: function (result) {
-
-                                document.getElementsByClassName("DomProductPrice")[rowIndex - 1].value = result;
-                                ChangeTotal(thisObject);
-                            }, error: function () {
-                                alert("error");
-                            }
-                        });
-                    } else {
-                        document.getElementsByClassName("DomProductPrice")[rowIndex - 1].value = 0;
-                        ChangeTotal(thisObject);
-                    }
-                };
-
-                var option_0 = document.createElement("option");
-                option_0.text = "";
-                option_0.value = 0;
-                selectProduct.appendChild(option_0);
-
-                for (i = 0; i < getProductArray.length; i++) {
-                    var Productfield = getProductArray[i].split(',');
-                    var option = document.createElement("option");
-                    option.value = Productfield[0];
-                    option.text = Productfield[1];
-                    selectProduct.appendChild(option);
-                }
-
-                Td_pro.appendChild(selectProduct);
-
-                var TextBox_price = document.createElement("input");
-                TextBox_price.type = "text";
-                TextBox_price.value = 0;
-                TextBox_price.style.textAlign = "right";
-                TextBox_price.setAttribute("class", "DomProductPrice");
-                TextBox_price.addEventListener("change", function () {
-                    ChangeTotal(this);
-                });
-                Td_price.appendChild(TextBox_price);
-
-                var TextBox_quantity = document.createElement("input");
-                TextBox_quantity.type = "text";
-                TextBox_quantity.value = 0;
-                TextBox_quantity.style.textAlign = "right";
-                TextBox_quantity.setAttribute("class", "DomProductQuantity");
-                TextBox_quantity.addEventListener("change", function () {
-                    ChangeTotal(this);
-                });
-
-                Td_quantity.appendChild(TextBox_quantity);
-
-                var span_total = document.createElement("span");
-                span_total.setAttribute("class", "DomTotal");
-                span_total.appendChild(document.createTextNode("0"));
-
-                Td_total.align = "right";
-                Td_total.appendChild(span_total);
-
-                var Btn_cancel = document.createElement("button");
-                Btn_cancel.setAttribute("class", "DomBtnCancel");
-                Btn_cancel.addEventListener("click", function () {
-                    var index = this.parentNode.parentNode.rowIndex;
-                    document.getElementById("tab").deleteRow(index);
-                    doAllTotal();
-                });
-                Btn_cancel.appendChild(document.createTextNode("取消"));
-                Td_cancel.appendChild(Btn_cancel);
-
-                Tr.appendChild(Td_pro);
-                Tr.appendChild(Td_price);
-                Tr.appendChild(Td_quantity);
-                Tr.appendChild(Td_total);
-                Tr.appendChild(Td_cancel);
-
-                document.getElementById("tab-tbody").appendChild(Tr);
-            };
-
-
-            function ChangeTotal(thisObject) {
-                var index = thisObject.parentNode.parentNode.rowIndex - 1;
-
-                var price = document.getElementsByClassName("DomProductPrice")[index];
-                if (price.value == "") price.value = 0;
-                var quantity = document.getElementsByClassName("DomProductQuantity")[index];
-                if (quantity.value == "") quantity.value = 0;
-
-                var Total = document.getElementsByClassName("DomTotal")[index];
-                Total.innerHTML = formatNumber(price.value * quantity.value);
-
-                doAllTotal();
-            }
-
-            function doAllTotal() {
-                var domTotal = document.getElementsByClassName("DomTotal");
-                var sum = 0;
-                for (i = 0; i < domTotal.length; i++) {
-                    sum += parseFloat(replaceAll(domTotal[i].innerHTML));
-                }
-                document.getElementById("allTotal").innerHTML = "$ " + formatNumber(sum);
-            }
 
             function replaceAll(n) {
                 while (n.indexOf(",") != -1) {
@@ -365,45 +580,70 @@
             };
 
             document.getElementById("SaveData").onclick = function () {
-                var class_required = document.getElementsByClassName("required");
 
-                var boo = false;
-                for (i = 0; i < class_required.length; i++) {
-                    if (class_required[i].value == "" || class_required[i].value == 0) {
-                        boo = true;
-                        break;
-                    }
+                var validator = $("#MyForm").data("kendoValidator");
+                if (validator.validate()) {
+                    saveData();
                 }
-
-                boo ? alert("請輸入必填欄位") : saveData();
             };
 
+            //----  notification          
+            var notification = $("#notification").kendoNotification({
+                stacking: "top",
+                templates: [ {
+                    type: "error",
+                    template: $("#errorTemplate").html()
+                }]
+            }).data("kendoNotification");
+    
+            $(document).one("kendo:pageUnload", function(){ if (notification) { notification.hide(); } });
 
-            function saveData() {
+            function saveData() {   
                 var ODitem = [], ODprice = [], ODquantity = [];
-
-                var DomProducts = document.getElementsByClassName("DomProductSelect");
-                var DomPrice = document.getElementsByClassName("DomProductPrice");
-                var DomQuantuty = document.getElementsByClassName("DomProductQuantity");
-                for (i = 0; i < DomProducts.length; i++) {
-                    if (DomProducts[i].value != 0) {
-                        ODitem.push(DomProducts[i].value);
-                        ODprice.push(DomPrice[i].value);
-                        ODquantity.push(DomQuantuty[i].value);
+            
+                //可抓所有tr
+                var theGrid = $("#grid").data("kendoGrid");
+                var tr = $("#grid tbody").find('tr').each(function () {
+                    var model =  theGrid.dataItem(this);
+                    kendo.bind(this,model);
+                });
+     
+                for(var i=0;i<tr.length;i++)
+                {
+                    if(tr[i].children[0].innerText!="-Select-")
+                    {
+                        $.ajax({
+                            type:'post',
+                            url:'@Url.Action("getProductID")',
+                            async:false,
+                            data:{
+                                productName:tr[i].children[0].innerText
+                            },success:function(productId){
+                                ODitem.push(productId);
+                                ODprice.push(tr[i].children[1].innerText);
+                                ODquantity.push(tr[i].children[2].innerText);
+                            },error:function(){
+                                console.log("error");
+                            }
+                        });
                     }
                 }
 
+                //save
                 $.ajax({
                     type: 'post',
                     url: '@Url.Action("UpdateOrder_Save")',
                     data: {
                         OrderID: $('#OrderId').text(),
-                        CustomerID: $('#CustName option:selected').val(),
-                        EmployeeID: $('#EmpName option:selected').val(),
+                        CustomerID:  $("#CustName").data("kendoComboBox").value(),
+                        //  CustomerID: $('#CustName option:selected').val(),
+                        EmployeeID: $("#EmpName").data("kendoComboBox").value(),
+                        // EmployeeID: $('#EmpName option:selected').val(),
                         OrderDate: $('#OrderDate').val(),
                         RequiredDate: $('#RequireDate').val(),
                         ShippedDate: $('#ShipDate').val(),
-                        ShipperID: $('#ShipCompany option:selected').val(),
+                        ShipperID: $("#ShipCompany").data("kendoComboBox").value(),
+                        //  ShipperID: $('#ShipCompany option:selected').val(),
                         Freight: $('#Freight').val(),
                         ShipCountry: $('#ShipCountry').val(),
                         ShipCity: $('#ShipCity').val(),
@@ -416,13 +656,15 @@
                         ODquantity: ODquantity
 
                     }, success: function () {
-                        alert("修改成功。");
+
+                        notification.show({
+                            title: "Update Success"
+                        }, "error");
+                        // alert("success");
 
                     }, error: function () { alert("Error"); }
                 });
             }
-
-
 
         </script>
 
