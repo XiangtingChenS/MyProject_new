@@ -297,7 +297,8 @@
                         }
                         
                         setOrderDetail(data);
-                        
+                        ChangeSumTotal();
+  
                     }, error: function () {
                         alert("error");
                         document.getElementById("SaveData").disabled = true;
@@ -401,6 +402,8 @@
                 $("#DeleteOrder").kendoButton();
                 $("#beforePage").kendoButton();
 
+
+
             });
             //end document read
             
@@ -421,6 +424,7 @@
                         }
                     }
                 });
+                ///*name:"destroy"*//*,click:aa*/
                 //<span class='k-icon k-i-close' id='temp' style='float: right;' onclick='ChangeSubTotal()'></span>"
                 $("#grid").kendoGrid({
                     dataSource: dataSource,
@@ -430,20 +434,23 @@
                         { field: "UnitPrice", title: "單價",editor: SubTotalChange_Editor},
                          { field:"Quantity",title:"數量" ,editor: SubTotalChange_Editor},
                         { field: "SubTotal", title:"小計", format: "{0:n0}", width: "130px" },
-                        { command: [{name:"destroy"/*,click:aa*/}], title: "", width: "150px" }],
+                        { command: [{name:"Delete",text:"刪除",click:function(e){
+                                e.preventDefault();
+                                var tr = $(e.target).closest("tr");
+                                var trData = this.dataItem(tr);
+
+                                var dataSource = $("#grid").data("kendoGrid").dataSource;
+                                dataSource.remove(trData);
+                                dataSource.sync();
+                                ChangeSumTotal();
+                        }}], title: "", width: "150px" }],
                     editable: true,
                     edit: function(e) {
                         model = e.model; 
                     }
                 });
-
-
+                console.log("1");
             }
-
-            //function aa(e)
-            //{
-            //    console.log("pp");
-            //}
 
             
             //---same----
@@ -508,7 +515,12 @@
             { 
                 var subtotal=model.UnitPrice*model.Quantity;
                 model.set("SubTotal",subtotal);
+                ChangeSumTotal();
+            }
+            // ----end same-----
 
+            function ChangeSumTotal()
+            {
                 //可抓所有tr
                 var theGrid = $("#grid").data("kendoGrid");
                 var tr = $("#grid tbody").find('tr').each(function () {
@@ -523,7 +535,6 @@
                 }
                 document.getElementById("allTotal").innerHTML = "$ " +formatNumber(sum);
             }
-            // ----end same-----
 
 
             document.getElementById("beforePage").onclick = function () {
