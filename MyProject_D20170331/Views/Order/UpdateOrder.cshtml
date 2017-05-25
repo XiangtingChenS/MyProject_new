@@ -69,6 +69,10 @@
                 padding: 10px 20px 0px 20px;
             }
         /* end notification css*/
+
+        .k-grid .TextRight {
+            text-align:right;
+        }
     </style>
 </head>
 <body>
@@ -198,16 +202,28 @@
                 <span id="notification" style="display:none;"></span>
                 <div id="grid"></div>
             </div>
-            <br><br><br><br><br><br>
 
+            <div id="window"></div>
+            <script type="text/x-kendo-template" id="windowTemplate">
+                <div style="text-align:center; ">
+                   <b> 確定要刪除該筆訂單嗎?</b> <br><br>
+                    <button class="k-button" id="yesButton">Yes</button>
+                    <button class="k-button" id="noButton"> No</button>
+                </div>
+            </script>
+
+
+       
             <script id="errorTemplate" type="text/x-kendo-template">
                 <div class="wrong-pass">
                     <h3>#= title #</h3>
                 </div>
             </script>
-</div>
+
+       </div>
 
         <script>
+            var windowTemplate = kendo.template($("#windowTemplate").html());
             var getProductArray = [];
             // $(document).ready(function () {
             $.get('@Url.Action("getProduct")', function (result) {
@@ -419,7 +435,7 @@
                                 Product: { defaultValue: { ProductID: "0", ProductName: "-Select-"} },
                                 UnitPrice: { type: "number"/*, validation: { required: true, min: 1}*/ },
                                 Quantity:{ type: "number"/*, validation: { required: true, min: 1}*/ },
-                                SubTotal:{ type: "number" /*editable: false*//*, validation: { required: true, min: 1}*/ },
+                                SubTotal:{ type: "number"/*,editable: false*//*, validation: { required: true, min: 1}*/ },
                             }
                         }
                     }
@@ -431,9 +447,9 @@
                     toolbar: ["create"],
                     columns: [
                         { field:"Product",title:"商品",  editor: productDropDownEditor, template: "#=Product.ProductName#" },
-                        { field: "UnitPrice", title: "單價",editor: SubTotalChange_Editor},
-                         { field:"Quantity",title:"數量" ,editor: SubTotalChange_Editor},
-                        { field: "SubTotal", title:"小計", format: "{0:n0}", width: "130px" },
+                        { field: "UnitPrice", title: "單價",editor: SubTotalChange_Editor,attributes:{class:"TextRight"}},
+                         { field:"Quantity",title:"數量" ,editor: SubTotalChange_Editor,attributes:{class:"TextRight"}},
+                        { field: "SubTotal", title:"小計", format: "{0:n0}", width: "130px",attributes:{class:"TextRight"}},
                         { command: [{name:"Delete",text:"刪除",click:function(e){
                                 e.preventDefault();
                                 var tr = $(e.target).closest("tr");
@@ -449,7 +465,18 @@
                         model = e.model; 
                     }
                 });
-                console.log("1");
+
+                //可抓所有tr
+                var theGrid = $("#grid").data("kendoGrid");
+                var tr = $("#grid tbody").find('tr').each(function () {
+                    var model =  theGrid.dataItem(this);
+                    kendo.bind(this,model);
+                });
+
+                for(var i=0;i<tr.length;i++)
+                {
+                    tr[i].children[3].disabled=true;
+                }
             }
 
             
@@ -461,6 +488,9 @@
                      change:ChangeSubTotal
                  });
             }
+
+            
+
 
 
             function productDropDownEditor(container, options) {
@@ -517,7 +547,7 @@
                 model.set("SubTotal",subtotal);
                 ChangeSumTotal();
             }
-            // ----end same-----
+           
 
             function ChangeSumTotal()
             {
@@ -535,7 +565,7 @@
                 }
                 document.getElementById("allTotal").innerHTML = "$ " +formatNumber(sum);
             }
-
+            // ----end same-----
 
             document.getElementById("beforePage").onclick = function () {
                 location.href = "/Order/QueryOrder";
@@ -571,27 +601,39 @@
 
 
             document.getElementById("DeleteOrder").onclick = function () {
+                var window = $("#window").kendoWindow({
+                    modal: true,
+                    title: "訊息",
+                    visible: false, 
+                    width: "300px",
+                    height: "80px",
+                }).data("kendoWindow");
 
-                var dialog = confirm("確定要刪除該筆訂單嗎?");
-                if (dialog == true) {
+                window.content(windowTemplate(""));
+                window.center().open();
+
+                $("#yesButton").click(function(){
                     $.ajax({
                         type: 'post',
                         url: '@Url.Action("QueryOrder_Delete")',
                         data: {
                             OrderID: document.getElementById("OrderId").innerHTML
                         }, success: function () {
-                            alert("刪除成功! 導回前一頁。");
+                            //alert("刪除成功! 導回前一頁。");
                             location.href = "/Order/QueryOrder";
                         }, error: function () {
                             alert("Delete Error");
                         }
                     });
-                }
+                    window.close();
+                });
 
+                $("#noButton").click(function(){
+                    window.close();
+                });
             };
 
             document.getElementById("SaveData").onclick = function () {
-
                 var validator = $("#MyForm").data("kendoValidator");
                 if (validator.validate()) {
                     saveData();

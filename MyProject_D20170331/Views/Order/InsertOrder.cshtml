@@ -70,6 +70,9 @@
         }
         /* end notification css*/
 
+        .TextRight {
+            text-align:right;
+        }
      </style>
 </head>
 
@@ -246,10 +249,19 @@
                 toolbar: ["create"],
                 columns: [
                     { field:"Product",title:"商品",  editor: productDropDownEditor, template: "#=Product.ProductName#" },
-                    { field: "UnitPrice", title: "單價",editor: SubTotalChange_Editor},
-                     { field:"Quantity",title:"數量" ,editor: SubTotalChange_Editor},
-                    { field: "SubTotal", title:"小計", format: "{0:n0}", width: "130px" },
-                    { command: "destroy", title: "", width: "150px" }],
+                    { field: "UnitPrice", title: "單價",editor: SubTotalChange_Editor,attributes:{class:"TextRight"}},
+                     { field:"Quantity",title:"數量" ,editor: SubTotalChange_Editor,attributes:{class:"TextRight"}},
+                    { field: "SubTotal", title:"小計", format: "{0:n0}", width: "130px",attributes:{class:"TextRight"} },
+                     { command: [{name:"Delete",text:"刪除",click:function(e){
+                        e.preventDefault();
+                        var tr = $(e.target).closest("tr");
+                        var trData = this.dataItem(tr);
+
+                        var dataSource = $("#grid").data("kendoGrid").dataSource;
+                        dataSource.remove(trData);
+                        dataSource.sync();
+                        ChangeSumTotal();
+                    }}], title: "", width: "150px" }],
                 editable: true,
                 edit: function(e) {
                     model = e.model; 
@@ -393,6 +405,18 @@
                 dataSource:Product,
                 change:onChange_productDropDown
             });
+
+            //可抓所有tr
+            var theGrid = $("#grid").data("kendoGrid");
+            var tr = $("#grid tbody").find('tr').each(function () {
+                var model =  theGrid.dataItem(this);
+                kendo.bind(this,model);
+            });
+
+            for(var i=0;i<tr.length;i++)
+            {
+                tr[i].children[3].disabled=true;
+            }
         }
 
         function onChange_productDropDown(e){
@@ -417,7 +441,12 @@
         { 
             var subtotal=model.UnitPrice*model.Quantity;
             model.set("SubTotal",subtotal);
+            ChangeSumTotal();
+        }
 
+
+        function ChangeSumTotal()
+        {
             //可抓所有tr
             var theGrid = $("#grid").data("kendoGrid");
             var tr = $("#grid tbody").find('tr').each(function () {
@@ -432,7 +461,6 @@
             }
             document.getElementById("allTotal").innerHTML = "$ " +formatNumber(sum);
         }
-
 
 
 
